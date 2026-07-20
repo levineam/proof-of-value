@@ -2,7 +2,7 @@
 
 ## Proof of Value using AT Protocol and Koinos
 
-**Version 0.1 — private working draft — 18 July 2026**
+**Version 0.3 — private working draft — 20 July 2026**
 
 > This document is a design paper, not an offer, a promise of token value, or an implementation specification. The SWARM mechanism is a proposal; parameters and integration details marked open require design, implementation, and prototype validation.
 
