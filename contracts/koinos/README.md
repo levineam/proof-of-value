@@ -21,6 +21,8 @@ The release build generates `abi/spike.abi`, `abi/spike-abi.json`, generated Ass
 
 ## Harbinger boundary
 
-`npm run contracts:probe` builds first and then exits with a structured block until an operator-only deploy/retrieval script is reviewed. It must retrieve the current Harbinger chain ID, upload the WASM, register the ABI, invoke `record_content`, then independently fetch and decode `pov.spike.content_recorded`. A chain ID, transaction ID, or decoded event must never be invented or copied from a prior Harbinger epoch.
+`npm run contracts:probe` builds first and then fails closed unless the operator supplies a dedicated funded key and HTTPS Harbinger RPC URL outside the repository. It retrieves and optionally checks the current chain ID, uploads the WASM and ABI, invokes `record_content`, then independently fetches the mined block receipt and decodes `pov.spike.content_recorded`. A chain ID, transaction ID, or decoded event must never be invented or copied from a prior Harbinger epoch.
+
+Set `KOINOS_HARBINGER_CHAIN_ID` after independently retrieving and approving the current chain identity. The probe refuses to write if that value disagrees with the RPC. Optional `POV_SPIKE_DID`, `POV_SPIKE_CID`, and `POV_SPIKE_AT_URI` values customize the U1 event; the defaults are explicitly toolchain-only placeholders.
 
 See [toolchain evidence](../../docs/development/toolchain-evidence.md) for the current result.

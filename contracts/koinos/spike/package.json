@@ -4,6 +4,7 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
+    "koilib": "9.2.0"
   },
   "devDependencies": {
     "@koinos/sdk-as": "1.4.0",
@@ -24,7 +25,7 @@
     "lint": "eslint --max-warnings 0 --ext ts \"*/assembly/**/*.ts\"",
     "build:debug": "koinos-sdk-as-cli build-all debug 0 spike.proto",
     "build:release": "koinos-sdk-as-cli build-all release 0 spike.proto",
-    "test": "koinos-sdk-as-cli run-tests",
+    "test": "koinos-sdk-as-cli run-tests && node --test scripts/*.test.mjs",
     "probe": "yarn build:release && node scripts/harbinger-probe.mjs"
   }
 }
