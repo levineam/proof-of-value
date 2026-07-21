@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package spike;
+
+// The smallest representative content shape used only to prove the maintained
+// Koinos generator, ABI, WASM, and event path before the U2 protocol schema.
+enum content_reference_version {
+  content_reference_version_unspecified = 0;
+  content_reference_version_v1 = 1;
+}
+
+message content_reference {
+  string did = 1;
+  bytes cid = 2;
+  string at_uri = 3;
+  content_reference_version version = 4;
+}
+
+// @description Emits a protobuf-encoded content reference proof event.
+// @read-only false
+message record_content_arguments {
+  content_reference content = 1;
+}
+
+message record_content_result {
+  uint32 event_version = 1;
+}
+
+message content_recorded_event {
+  content_reference content = 1;
+  uint32 event_version = 2;
+}
