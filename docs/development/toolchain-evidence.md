@@ -36,7 +36,18 @@ The application pins the current Next.js 15.5 backport (`15.5.20`) and its match
 
 ## Exact unresolved dependencies
 
-1. Supply a dedicated funded Harbinger wallet and API-key RPC outside the repository.
-2. Retrieve and operator-approve the fresh chain ID, then run `npm run contracts:probe` to deploy, invoke, independently fetch, and decode the event.
+The dedicated testnet-only operator wallet has been generated:
 
-The live step cannot be simulated. The reviewed probe fails closed on missing credentials or a mismatched expected chain ID, never prints the private key, deploys the compiled contract with its ABI, invokes `record_content`, and verifies the named event by fetching the mined block receipt through a read-only query. This environment exposes neither `KOINOS_HARBINGER_RPC_URL` nor `KOINOS_HARBINGER_PRIVATE_KEY`, and it has no funded operator wallet. It therefore cannot deploy, invoke, or retrieve a real event. The `contracts:probe` command preserves that explicit block rather than reporting a simulated success.
+- Public address: `1KceQLhUV99WrGk6ojwwFg2c1MvmEpLH8w`
+- Secret storage: macOS login Keychain
+- Keychain service: `com.andrew.proof-of-value.harbinger.operator`
+- Verification: the stored WIF was retrieved in-process and matched before the generating process discarded its copy
+- Repository exposure: public address and Keychain locator only; no private key, seed, or wallet file
+
+Remaining dependencies:
+
+1. Fund `1KceQLhUV99WrGk6ojwwFg2c1MvmEpLH8w` with Harbinger tKOIN.
+2. Supply an API-key Harbinger HTTPS RPC URL outside the repository.
+3. Retrieve and operator-approve the fresh chain ID, then run `npm run contracts:probe` to deploy, invoke, independently fetch, and decode the event.
+
+The live step cannot be simulated. The reviewed probe fails closed on missing credentials or a mismatched expected chain ID, never prints the private key, deploys the compiled contract with its ABI, invokes `record_content`, and verifies the named event by fetching the mined block receipt through a read-only query. The signer now exists but is not yet funded, and this environment still has no `KOINOS_HARBINGER_RPC_URL`. It therefore cannot deploy, invoke, or retrieve a real event. The `contracts:probe` command preserves that explicit block rather than reporting a simulated success.
