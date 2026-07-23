@@ -13,3 +13,4 @@ contracts/koinos/spike/assembly/proto/*.ts
 contracts/koinos/spike/assembly/index.ts
 contracts/koinos/spike/assembly/*.boilerplate.ts
 contracts/koinos/spike/node_modules/
+.gstack/

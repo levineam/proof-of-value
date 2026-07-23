@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://proof-of-value.example/spec/protocol/proof-manifest.schema.json",
+  "title": "PoV protocol proof manifest (scaffold)",
+  "description": "Placeholder schema for the U2 proof-manifest contract. This stub is intentionally minimal and unofficial; the authoritative manifest additionally records chain epoch, both authorities, both transaction/event evidence chains, immutable deployed-code hash, source revision, reproducible build provenance, and verifier-policy version per plan KTD11. Status: scaffold — not yet implemented.",
+  "type": "object",
+  "properties": {
+    "atUri": {
+      "type": "string",
+      "description": "Placeholder property. The DID-based AT URI locating the evaluated record, e.g. at://did:plc:example/app.bsky.feed.post/abc123. Not yet enforced by this scaffold stub."
+    },
+    "observedCid": {
+      "type": "string",
+      "description": "Placeholder property. The observed content-addressed CID binding the exact record version attested, distinct from the mutable atUri. Not yet enforced by this scaffold stub."
+    },
+    "harbingerTxId": {
+      "type": "string",
+      "description": "Placeholder property. The Harbinger transaction ID recording the fact attestation or referenced evaluation. Not yet enforced by this scaffold stub."
+    }
+  },
+  "additionalProperties": true
+}

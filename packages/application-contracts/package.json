@@ -1,0 +1,6 @@
+{
+  "name": "@pov/application-contracts",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Framework-neutral application read-contract (feed/detail/proof-evidence view types) shared by the web client and application service."
+}
