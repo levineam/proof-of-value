@@ -1,0 +1,6 @@
+{
+  "name": "@pov/application",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Application service assembling a combined product view from the AT adapter and app-index."
+}

@@ -1,0 +1,16 @@
+.worktrees/
+.DS_Store
+node_modules/
+.next/
+coverage/
+*.tsbuildinfo
+.env
+.env.local
+!.env.example
+contracts/koinos/spike/build/
+contracts/koinos/spike/abi/
+contracts/koinos/spike/assembly/proto/*.ts
+contracts/koinos/spike/assembly/index.ts
+contracts/koinos/spike/assembly/*.boilerplate.ts
+contracts/koinos/spike/node_modules/
+.gstack/

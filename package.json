@@ -1,0 +1,30 @@
+{
+  "name": "proof-of-value",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "npm@11.11.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=11.0.0"
+  },
+  "scripts": {
+    "build": "npm run build --workspace=@pov/web",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "tsc -p tsconfig.base.json --noEmit",
+    "test": "npm run test --if-present --workspaces",
+    "contracts:build": "COREPACK_ENABLE_PROJECT_SPEC=0 yarn --cwd contracts/koinos/spike build:release",
+    "contracts:test": "COREPACK_ENABLE_PROJECT_SPEC=0 yarn --cwd contracts/koinos/spike test",
+    "contracts:probe": "COREPACK_ENABLE_PROJECT_SPEC=0 yarn --cwd contracts/koinos/spike probe"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "15.5.20",
+    "@eslint/js": "9.32.0",
+    "eslint": "9.32.0",
+    "typescript": "5.8.3",
+    "typescript-eslint": "8.39.0"
+  }
+}

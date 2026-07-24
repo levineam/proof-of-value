@@ -1,0 +1,6 @@
+{
+  "name": "@pov/at-adapter",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Middleware normalizing live AT Protocol/Bluesky reads into explicit live/stale/unavailable/invalid states."
+}
