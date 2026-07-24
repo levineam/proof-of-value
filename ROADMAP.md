@@ -74,9 +74,8 @@ prospective collaborators.
 **Status:** `ARCHITECTURE.md`, this `ROADMAP.md`, and `CONTRIBUTING.md` exist.
 `docs/development/getting-started.md`, `component-map.md`, `open-questions.md`,
 `demo-script.md`, `upgrades.md`, and `.github/CODEOWNERS` are not yet written.
-No `LICENSE` has been chosen yet (plan R23: outbound license and inbound
-contribution terms must be declared before an external contribution is
-accepted).
+The outbound license is **MIT** (`LICENSE`). Inbound contribution terms (plan
+R23) still need to be stated before external contributions are accepted.
 
 ### U9. Collaborator-facing read-only deployment — designed, not built
 Give prospective contributors a low-friction hosted view of the feed and
