@@ -2,11 +2,15 @@
 
 ## Proof of Value using AT Protocol and Koinos
 
-**Version 0.3 — private working draft — 20 July 2026**
+**Version 0.4 — private working draft — 24 July 2026**
 
 > This document is a design paper, not an offer, a promise of token value, or an implementation specification. The SWARM mechanism is a proposal; parameters and integration details marked open require design, implementation, and prototype validation.
+>
+> **This is a beta, and the token is not the point.** The first SWARM token is a valueless test token. It is not designed to appreciate in value, and no one should participate in the expectation that it will. The development authority explicitly retains the right to change the token economics entirely: Koinos's upgradeable contracts make rapid iteration the purpose of this stage rather than an exception to it. Every such change is announced and versioned, and the authority is subject to the sunset conditions in §9.
 
 ## Abstract
+
+Proof of Value provides **turnkey marketplaces for information**. Any organization can deploy one to reward the information its members produce, according to the collective judgment of the people who actually value that information. This matters most for organizations without a center: a company aligns its people with shares, recorded by a registry and enforced by courts, and a state aligns its people with a currency it issues and backs; both instruments presuppose the center that issues them. An organization without such a center has no comparable instrument for rewarding contribution that cannot be objectively measured. The product proposed here is the marketplace, not a token. A token is only the accounting unit a particular marketplace uses to express what its community judged worth rewarding, and the mechanism is deliberately designed so that no one needs to care about its price—or, eventually, needs to know a blockchain is involved at all.
 
 Markets are powerful because a price aggregates the judgments of many people who have skin in the game, but a market can only price what can be directly bought and sold. The internet produces enormous quantities of information—posts, reviews, art, explanations, and the countless smaller social contributions that make a network worth participating in—whose value is real without being captured by any transaction. Social platforms currently monetize that uncaptured value indirectly, through attention and advertising, rather than rewarding it directly. This paper proposes Proof of Value, a token-distribution mechanism that extends economically committed collective judgment to information that markets cannot price directly, informed by the mature Subjective Proof of Work design developed for Steem. Its aim is not an objectively correct valuation but provable fairness: the rules by which judgments are aggregated into rewards are published in advance, applied identically to everyone, settled deterministically, and open to independent inspection, so that what can be demonstrated is the fairness of the process rather than the correctness of the result. Its reference implementation, SWARM—the Stake-Weighted Autonomous Reward Mechanism—defines a predetermined token budget for each reward period and allocates it deterministically at settlement according to stake-weighted upvotes and downvotes.
 
@@ -44,6 +48,8 @@ The evaluated object is information in general. The first client focuses on fami
 
 This paper uses provable fairness in a broader sense than blockchain gaming, where "provably fair" refers narrowly to a cryptographic commit-reveal scheme letting a player verify that one random outcome was not altered after the fact. The shared idea is that participants need not trust an operator's word. The difference is that SWARM makes no claim about randomness or about any single outcome being correct; its claim is that the allocation rule is public, the inputs are recorded, and the result can be recomputed by anyone from the canonical event history.
 
+Provable fairness is a claim about each settled period under the rules in force when that period settles. It is not a claim that the rules are permanent. During the beta the development authority may change the mechanism between periods (§9), and a reader should understand the guarantee accordingly: within a period, the published rule and only that rule determined the distribution, and anyone can recompute it; across periods, the rule itself may have changed, and every such change is announced and versioned so the history remains auditable. A mechanism that can be revised is not thereby unfair, but it is only as inspectable as its change record.
+
 Provable fairness so defined applies to the allocation the contract performs on the attestations it accepts. It does not extend to what reaches the contract in the first place: the attestation bridge described in Section 5 can delay, omit, or mis-attest facts, and the sufficiency of emitted events for independent reconstruction remains an open question. Provable fairness is therefore the standard this design is built to meet, not a property already demonstrated by a running system.
 
 The first reference implementation pairs AT Protocol with Koinos. A token name, ticker, market role, monetary policy beyond the prototype, and any claim of exchange value are outside this paper.
@@ -60,7 +66,7 @@ The lesson from self-voting is broader than “ban self-votes.” Direct prohibi
 
 ## 4. Reference mechanism
 
-Let reward period `t` have a predetermined new-SWARM budget `B_t`. For each voter `i`, let `S_i,t` be that voter's eligible SWARM balance snapshot for the period. A standard evaluation commits:
+Let reward period `t` have a new-SWARM budget `B_t`. `B_t` is set by a fixed inflation rate applied to the outstanding supply rather than by a fixed absolute quantity, so the budget scales with the system instead of shrinking in relative terms as supply grows. A constant issuance rate also has a deliberate secondary effect: holding SWARM idle is diluted by the issuance going to people who are evaluating, so the design rewards use rather than accumulation. For each voter `i`, let `S_i,t` be that voter's eligible SWARM balance snapshot for the period. A standard evaluation commits:
 
 `w_i,t = q × S_i,t`
 
@@ -158,7 +164,11 @@ No claim of “decentralized purity” follows from this architecture. The desig
 
 ## 9. Bootstrap and initial distribution
 
-The prototype should use one valueless SWARM test token on Koinos's Harbinger testnet. Harbinger is restartable, so the implementation must retrieve and disclose its fresh chain ID rather than hard-code one or imply permanence. Initial distribution is an open design decision and must be disclosed before any live evaluation period. A credible bootstrap plan should specify who receives initial voting influence, under what limits, what disclosures apply to operators and early recipients, and how any privileged balances or upgrade rights are sunset or reviewed.
+The prototype uses one valueless SWARM test token on a Koinos test network. Test networks are restartable and their endpoints change—the documented Harbinger endpoints are no longer served, and a community-operated testnet has replaced them—so the implementation must retrieve and disclose the current chain ID at runtime rather than hard-code one or imply permanence.
+
+The first token is earned, not sold. A small group receives SWARM only by contributing to the project, and no initial allocation is purchasable. This is what makes the base token suitable as the reserve that later marketplaces launch against (§12): it enters through contribution rather than through a sale that would select for buyers hoping to resell. Initial distribution must still be disclosed in full before any live evaluation period, including who receives initial voting influence, under what limits, and what disclosures apply to operators and early recipients.
+
+This stage is explicitly a beta. The development authority retains the ability to change the mechanism and its economics entirely, using Koinos's contract upgradeability; rapid revision in response to what the prototype reveals is the purpose of this stage. That authority is a concentration of power, not a technicality: it must publish who controls it, announce and version every change, and state the conditions under which it is sunset or transferred. A participant should assume the rules can change, which is one more reason this token is not an investment and should not be treated as one.
 
 The bootstrap objective is to test the complete loop—not to establish price, liquidity, or a reserve asset. An initial allocation should therefore be small, inspectable, and sufficient to exercise both positive and negative evaluation. It should not imply a public sale, investment return, or monetary value.
 
@@ -174,11 +184,17 @@ The closest lineage is Steem's Subjective Proof of Work and its subsequent rewar
 
 AT Protocol contributes portable identity and an open social-data architecture. Koinos contributes a programmable-chain setting with Mana resource accounting, payer/payee sponsorship, programmable authority, and contract-based platform upgradeability. These systems are inputs to the reference design, not endorsements or guarantees that every proposed SWARM integration is already available in the required form.
 
-## 12. Plural currencies: a deferred vision
+## 12. Plural marketplaces: the product
 
-People form higher-level bodies—communities, companies, cooperatives, nations—by sharing information, and each such body can have its own idea of what information is valuable. A long-term PoV ecosystem could let each operate its own token and reward mechanism around that idea, making social valuation more local and legible than one universal ranking system. Plural tokens are also the systemic check on capture described in Section 8: exit, alongside the downvote's voice. Plurality also introduces fragmentation, governance complexity, liquidity questions, and opportunities for confusion or extraction.
+The preceding sections describe one marketplace. The product is the ability to create them.
 
-Version one deliberately defers token factories, user-configurable mechanisms, AMMs, reserve-asset roles, and cross-currency routing. The first task is to make one complete mechanism intelligible and testable.
+People form higher-level bodies—communities, companies, cooperatives, nations—by sharing information, and each such body has its own idea of what information is valuable. A research collective, an open-source project, a trade association, and a neighborhood do not agree about what deserves reward, and they should not have to. The intended end state is that any such body can stand up its own information marketplace—its own token, its own budget, its own parameters—without negotiating for a place in someone else's ranking system. That is what "turnkey" means here, and it is the sense in which this is infrastructure for decentralized organizations rather than an application with users.
+
+Plurality is also the systemic check on capture described in Section 8. A community that judges its marketplace captured can leave and run another under the same mechanism: exit, alongside the downvote's voice. Concentration can capture a token; it cannot capture the mechanism. The base SWARM token is intended to become the reserve the later marketplaces launch against, which is why it is earned by contribution rather than sold (§9).
+
+Plurality introduces real costs: fragmentation, governance complexity, liquidity questions, and opportunities for confusion or extraction. Making the base token a reserve gives it value-accrual, and value-accrual is exactly where speculative pressure would concentrate—so the invisible, low-stakes experience intended for ordinary participants belongs at the individual marketplace layer, not at the reserve layer. These tensions are unresolved and are named here rather than deferred silently.
+
+Version one therefore ships one marketplace, not the factory. It defers token factories, user-configurable mechanisms, AMMs, formal reserve-asset roles, and cross-currency routing. The first task is to make one complete mechanism intelligible and testable; a factory for mechanisms nobody has validated would only multiply the unvalidated part.
 
 ## 13. Open questions
 
@@ -193,6 +209,10 @@ The following require explicit resolution before a production implementation or 
 7. What bootstrap distribution and upgrade-controller policy are legitimate for a test and how are they sunset, reviewed, or replaced?
 8. What adversarial simulation and user research are necessary before economic parameters are promoted beyond a prototype?
 9. Does the version-one mechanism produce sufficient honest evaluation without paid discovery, or do curator rewards need to be reintroduced—and can that be established from prototype behavior before economic parameters are promoted?
+10. Which transfer restrictions, if any, should apply to earned SWARM, and who decides them? Version one deliberately takes no position. A restriction chosen now would encode a guess about a problem a valueless test token does not yet have, and the question properly belongs to whatever community of maintainers emerges rather than to the initial authors.
+11. Is a settlement-period lock sufficient skin in the game? A vote immobilizes stake until settlement, but the voter bears no loss for having voted badly: nothing resolves, and no gain or loss attaches to the judgment itself, unlike a position in a prediction market. Whether locked opportunity cost alone is enough to produce careful evaluation is untested.
+12. Does the revised mechanism actually suppress the failure modes that buried Steem? Vote-selling markets, self-dealing by large holders, and retaliatory downvoting are properties of stake-weighted continuous voting rather than of the chain beneath it (§3). The convergent curve, the settlement-period lock, and bounded downvote capacity are attempts to suppress them; none is yet demonstrated.
+13. Does the mechanism survive cheap synthetic content and automated evaluation? Nothing in this design establishes personhood, and nothing prevents a holder from delegating evaluation to agents optimized to capture issuance. Whether stake-weighted judgment still carries signal when both production and evaluation are model-mediated is open (§8).
 
 ## 14. Conclusion
 
