@@ -14,3 +14,4 @@ contracts/koinos/spike/assembly/index.ts
 contracts/koinos/spike/assembly/*.boilerplate.ts
 contracts/koinos/spike/node_modules/
 .gstack/
+docs/whitepaper-v04-restructure-plan.md

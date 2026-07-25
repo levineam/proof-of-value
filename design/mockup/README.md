@@ -1,7 +1,26 @@
-# Mockup reconstruction provenance
+# Feed mockup (design reference)
 
-No importable mockup source tree or package lock was recoverable in this repository on 2026-07-20. This directory therefore does **not** claim that a mockup has been imported.
+A standalone Next.js mockup of the primary feed experience: ranked posts with
+stake-weighted upvote/downvote controls, per-item pending-reward display, a
+per-period vote budget, a post detail view showing the allocation math, and a
+wallet view distinguishing available from vote-locked balance. All state is
+browser-local and the reward calculation is hard-coded — nothing here talks to
+AT Protocol or a chain.
 
-The surviving authoritative reconstruction description is the implementation plan and its source audit: an App Router application with an `@/*` alias; `PostCard`, `VoteBar`, `TopBar`, `TabBar`, and `Avatar` components; and browser-local `lib/store.js` / `lib/data.js`. Its resolved application line is patched Next.js 15.5 with React 19.
+This is the U4 starting point (see `docs/plans/`, unit U4): the plan calls for
+reconstructing this experience inside `apps/web` against
+`@pov/application-contracts`, with real provenance labels replacing mock state.
+Until then it runs on its own:
 
-The only available visual artifact is [proof-of-value-architecture.png](../../assets/proof-of-value-architecture.png). It is an architecture graphic, not a feed mockup. U4 must reconstruct the experience from this provenance and label any design-demo state truthfully; it must not present the result as a recovered source import.
+```bash
+cd design/mockup
+npm install
+npm run dev
+```
+
+Historical note: the original mockup predating this repository was not
+recoverable as source; this implementation was rebuilt from the surviving
+description (same components: `PostCard`, `VoteBar`, `TopBar`, `TabBar`,
+`Avatar`, browser-local `lib/store.js` / `lib/data.js`) and then extended with
+the mechanics-aware UI described above. It is a design reference, not a claim
+that any protocol integration exists.

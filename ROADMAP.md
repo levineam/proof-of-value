@@ -21,8 +21,10 @@ reflects what is actually built versus designed — never product completion.
 Turn the document repository into a cloneable workspace and prove the current
 Koinos compile/deploy/event path before shared schemas harden around it.
 **Status:** npm workspace and root tooling exist; the mockup source is
-tracked (`design/mockup/`); `contracts/koinos/spike/` builds, deploys to Harbinger,
-emits, and decodes one event with a passing test.
+tracked (`design/mockup/`); `contracts/koinos/spike/` builds and passes its
+test, with a probe script for deploying and decoding one event against a Koinos
+test network (the originally documented Harbinger endpoints are no longer
+served; the probe targets the current community testnet).
 
 ### U2. Versioned protocol and application contracts — designed, not built
 Define the stable protobuf, JSON, manifest, and application-view seams that
