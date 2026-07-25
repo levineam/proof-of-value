@@ -3,7 +3,11 @@
 A standalone Next.js mockup of the primary feed experience: ranked posts with
 stake-weighted upvote/downvote controls, per-item pending-reward display, a
 per-period vote budget, a post detail view showing the allocation math, and a
-wallet view distinguishing available from vote-locked balance. All state is
+wallet view distinguishing available from vote-locked balance. A marketplace
+switcher toggles between two feeds sharing the same mechanism — **PoV Build**
+(contributions to this project itself, per §10, with merge/CI status shown) and
+**Open Social** (a Bluesky-style content feed) — each with its own period
+budget, demonstrating the plural-marketplaces claim of §12. All state is
 browser-local and the reward calculation is hard-coded — nothing here talks to
 AT Protocol or a chain.
 

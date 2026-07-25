@@ -1,7 +1,12 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { MECH, POSTS, fCurve, voteStrength } from "./data";
+import { CONTRIBUTIONS, MARKETPLACES, MECH, POSTS, fCurve, voteStrength } from "./data";
+
+const ALL_ITEMS = [
+  ...POSTS.map((p) => ({ ...p, feed: p.feed || "social" })),
+  ...CONTRIBUTIONS,
+];
 
 const VoteContext = createContext(null);
 
@@ -9,13 +14,22 @@ const STORAGE_KEY = "pov-mock-votes";
 
 export function VoteProvider({ children }) {
   const [votes, setVotes] = useState({}); // postId -> "up" | "down"
+  const [marketplace, setMarketplace] = useState("build"); // plural marketplaces (§12)
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) setVotes(JSON.parse(saved));
+      const mkt = localStorage.getItem(STORAGE_KEY + "-mkt");
+      if (mkt && MARKETPLACES[mkt]) setMarketplace(mkt);
     } catch {}
   }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY + "-mkt", marketplace);
+    } catch {}
+  }, [marketplace]);
 
   useEffect(() => {
     try {
@@ -40,32 +54,40 @@ export function VoteProvider({ children }) {
   };
 
   const value = useMemo(() => {
-    // Effective weights with your committed votes applied.
-    const enriched = POSTS.map((p) => {
+    // Effective weights with your committed votes applied. Each marketplace has
+    // its own budget, so pending rewards are computed per feed (§12).
+    const enriched = ALL_ITEMS.map((p) => {
       const mine = votes[p.id] || null;
       const up = p.upWeight + (mine === "up" ? voteStrength : 0);
       const down = p.downWeight + (mine === "down" ? voteStrength : 0);
       const net = Math.max(0, up - down);
       return { ...p, mine, up, down, net, f: fCurve(net) };
     });
-    const sumF = enriched.reduce((s, p) => s + p.f, 0);
-    const posts = enriched.map((p) => ({
-      ...p,
-      pending: sumF > 0 ? (MECH.periodBudget * p.f) / sumF : 0,
-      share: sumF > 0 ? p.f / sumF : 0,
-    }));
+    const sumFByFeed = {};
+    for (const p of enriched) sumFByFeed[p.feed] = (sumFByFeed[p.feed] || 0) + p.f;
+    const posts = enriched.map((p) => {
+      const budget = MARKETPLACES[p.feed]?.budget ?? MECH.periodBudget;
+      const sumF = sumFByFeed[p.feed] || 0;
+      return {
+        ...p,
+        pending: sumF > 0 ? (budget * p.f) / sumF : 0,
+        share: sumF > 0 ? p.f / sumF : 0,
+      };
+    });
     const locked = votesUsed * voteStrength;
     return {
       posts,
+      feedPosts: posts.filter((p) => p.feed === marketplace),
+      marketplace,
+      setMarketplace,
       votes,
       toggleVote,
       votesUsed,
       votesLeft: MECH.votesPerPeriod - votesUsed,
       locked,
       available: MECH.balance - locked,
-      sumF,
     };
-  }, [votes, votesUsed]);
+  }, [votes, votesUsed, marketplace]);
 
   return <VoteContext.Provider value={value}>{children}</VoteContext.Provider>;
 }

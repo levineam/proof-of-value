@@ -14,8 +14,19 @@ export default function PostCard({ post, index = 0 }) {
             <span className="post-name">{post.name}</span>
             <span className="post-handle">@{post.handle} · {post.time}</span>
           </div>
+          {post.kind && (
+            <span className={`contrib-chip s-${post.status.replace(/\s+/g, "-")}`}>
+              {post.refLabel}
+            </span>
+          )}
         </header>
         <p className="post-text">{post.text}</p>
+        {post.meta && (
+          <p className="contrib-meta">
+            <span className={`status-dot s-${post.status.replace(/\s+/g, "-")}`} aria-hidden="true" />
+            {post.status} · {post.meta}
+          </p>
+        )}
         {post.embed && (
           <div className={`embed embed-${post.embed.kind}`}>
             {post.embed.kind === "photo" ? (

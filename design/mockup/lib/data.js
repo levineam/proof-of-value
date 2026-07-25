@@ -3,9 +3,16 @@
 // allocation curve F(n) = n²/(n+1), fixed per-period token budget, author-only payouts.
 
 export const MECH = {
-  periodBudget: 10000, // B_t — SWARM issued this reward period
+  periodBudget: 10000, // B_t — SWARM issued this reward period (per marketplace)
   votesPerPeriod: 24, // 1/q
   balance: 6418, // your eligible SWARM balance snapshot
+};
+
+// Plural marketplaces (§12): each community runs its own token and budget.
+// The mockup simplifies to one balance across both.
+export const MARKETPLACES = {
+  build: { key: "build", name: "PoV Build", token: "SWARM", budget: MECH.periodBudget },
+  social: { key: "social", name: "Open Social", token: "SWARM", budget: MECH.periodBudget },
 };
 
 export const voteStrength = MECH.balance / MECH.votesPerPeriod; // weight committed per vote
@@ -118,6 +125,107 @@ export const POSTS = [
     upWeight: 620,
     downWeight: 40,
     upCount: 9,
+    downCount: 1,
+  },
+];
+
+// The PoV Build marketplace: contributions to building Proof of Value itself.
+// Ground-truth adjacency (merged / CI / shipped) is part of the point — see §10.
+export const CONTRIBUTIONS = [
+  {
+    id: "c1",
+    feed: "build",
+    kind: "pr",
+    refLabel: "PR #921",
+    status: "in review",
+    handle: "charlie.pov.dev",
+    name: "Charlie",
+    time: "3h",
+    text: "Make the note/journal contract discoverable and add a link-existing mode — --help output, journal backlinks for touched notes, 13 new tests.",
+    meta: "6 files · +415 −16 · CI green",
+    upWeight: 4620,
+    downWeight: 380,
+    upCount: 12,
+    downCount: 1,
+  },
+  {
+    id: "c2",
+    feed: "build",
+    kind: "doc",
+    refLabel: "WHITEPAPER.md",
+    status: "merged",
+    handle: "andrew.pov.dev",
+    name: "Andrew",
+    time: "6h",
+    text: "v0.4: reframe around the social consensus algorithm — technical consensus secures ledgers; nothing yet establishes what information is worth.",
+    meta: "docs · +204 −41 · merged to main",
+    upWeight: 7940,
+    downWeight: 0,
+    upCount: 18,
+    downCount: 0,
+  },
+  {
+    id: "c3",
+    feed: "build",
+    kind: "pr",
+    refLabel: "PR #1",
+    status: "merged",
+    handle: "charlie.pov.dev",
+    name: "Charlie",
+    time: "1d",
+    text: "Component baseline: monorepo scaffold for every designed layer, architecture map, contributor docs. Honest-scaffold principle throughout.",
+    meta: "43 files · +1,102 −6 · merged",
+    upWeight: 5210,
+    downWeight: 140,
+    upCount: 14,
+    downCount: 1,
+  },
+  {
+    id: "c4",
+    feed: "build",
+    kind: "issue",
+    refLabel: "SUP-3677",
+    status: "open",
+    handle: "andrew.pov.dev",
+    name: "Andrew",
+    time: "1d",
+    text: "UPSTREAM_PLAN is write-only: 168 recorded promises, 148 files of mirror drift, zero reconciliation. Proposal: a reconcile script and a durable ledger.",
+    meta: "issue · reconciliation · high priority",
+    upWeight: 3380,
+    downWeight: 0,
+    upCount: 9,
+    downCount: 0,
+  },
+  {
+    id: "c5",
+    feed: "build",
+    kind: "review",
+    refLabel: "review: PR #921",
+    status: "changes requested",
+    handle: "gate.pov.dev",
+    name: "Review Gate",
+    time: "5h",
+    text: "Found two P1s before merge: a regex widening that silently deletes annotated journal bullets, and a sanitized/raw title mismatch producing dangling wiki-links.",
+    meta: "review · 2 P1, 4 P2 · GATE: FAIL",
+    upWeight: 6100,
+    downWeight: 90,
+    upCount: 16,
+    downCount: 1,
+  },
+  {
+    id: "c6",
+    feed: "build",
+    kind: "doc",
+    refLabel: "ARCHITECTURE.md",
+    status: "merged",
+    handle: "priya.dev",
+    name: "Priya Raman",
+    time: "2d",
+    text: "Six-layer component map with a rendered diagram: protocol gate, AT adapter, attestation bridge, reward ledger, app-index, web client.",
+    meta: "docs · +140 −0 · merged",
+    upWeight: 2240,
+    downWeight: 60,
+    upCount: 7,
     downCount: 1,
   },
 ];
