@@ -1,6 +1,6 @@
 # SWARM: A Stake-Weighted Reward Mechanism for Subjective Information Value
 ## Proof of Value using AT Protocol, with Koinos as the reference implementation
-**Version 0.4 — private working draft — 24 July 2026**
+**Version 0.4 — public draft for comment — 24 July 2026**
 
 > This document is a design paper, not an offer, a promise of token value, or an implementation specification. The SWARM mechanism is a proposal; parameters and integration details marked open require design, implementation, and prototype validation.
 > 

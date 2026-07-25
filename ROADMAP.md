@@ -69,7 +69,7 @@ scaffolded. No fact attestation or evaluation has been recorded on Harbinger
 beyond U1's unrelated feasibility event; no proof manifest exists yet.
 
 ### U8. Contributor-facing project package — in progress
-Make the private repository understandable, reviewable, and inviting to
+Make the repository understandable, reviewable, and inviting to
 prospective collaborators.
 **Status:** `ARCHITECTURE.md`, this `ROADMAP.md`, and `CONTRIBUTING.md` exist.
 `docs/development/getting-started.md`, `component-map.md`, `open-questions.md`,
