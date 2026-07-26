@@ -4,9 +4,9 @@
 
 ## Summary
 
-Blockchain consensus algorithms are technical infrastructure — they secure a ledger and meter its resources by charging for transactions, which aligns a financial system well and explains why, more than a decade in, finance is nearly the only thing decentralization has produced. The missing piece may be a **social consensus algorithm**: a decentralized way to leverage the wisdom of the crowd to value an arbitrary piece of information and distribute newly issued tokens according to that valuation. Because it runs on ordinary judgments rather than paid operators, it has to be free to use, require no expertise, and impose no barriers to entry — which is why a chain that charges for every small act of participation cannot host one.
+Blockchain consensus algorithms are technical infrastructure: they secure a ledger and meter its resources by charging for transactions. That model suits a financial system well and explains why, more than a decade in, finance is nearly the only thing decentralization has produced. The missing piece may be a **social consensus algorithm**: a decentralized way to leverage the wisdom of the crowd to value an arbitrary piece of information and distribute newly issued tokens according to that valuation. Because it runs on ordinary judgments rather than paid operators, it has to be free to use, require no expertise, and impose no barriers to entry — which is why a chain that charges for every small act of participation cannot host one.
 
-What that makes possible is **turnkey marketplaces for information**: any group can stand one up to reward the information its own members produce, according to its own idea of what is valuable. The product is the marketplace, not a token.
+This makes possible **turnkey marketplaces for information**: any group can stand one up to reward the information its own members produce, according to its own idea of what is valuable. The product is the marketplace, not a token.
 
 ## Start here
 
@@ -25,7 +25,7 @@ Very little, deliberately, and the repository is labeled accordingly. A Koinos s
 
 ## Unresolved
 
-If you are the kind of person who enjoys attacking a mechanism, [§13 of the white paper](WHITEPAPER.md) is the fastest route in. The questions the project most wants answered:
+If you enjoy attacking a mechanism, [§13 of the white paper](WHITEPAPER.md) is the fastest route in. The questions the project most wants answered:
 
 - **Does unpaid evaluation work?** Version one pays authors only, so honest evaluation is economically altruistic. Steem's curation rewards solved this and created its worst gaming surface.
 - **Is a settlement-period lock real skin in the game?** A vote immobilizes stake, but the voter never *loses* for being wrong — nothing resolves, unlike a position in a prediction market.

@@ -1,13 +1,13 @@
 # Proof of Value — Architecture
 
-The system is one deployable monorepo of independently-testable components, split
+The system is one deployable monorepo of independently testable components, split
 into six layers with a strict dependency order. Content and identity live on **AT
 Protocol**; stake-linked accounting and settlement live on **Koinos**; an explicit
 **attestation bridge** carries facts between them and is trusted to do nothing
 more. This document is the component map; the mechanism itself is specified in
 [WHITEPAPER.md](./WHITEPAPER.md) (see §5, "Reference architecture").
 
-> Status: this baseline is derived from the "POV Consolidation" compound-engineering
+> Status: this baseline comes from the "POV Consolidation" compound-engineering
 > pass (ce-brainstorm → ce-plan → ce-work, July 2026). The spike contract and web
 > client exist; the middle layers are designed and being scaffolded. Each
 > component below is a directory with its own README stating its single
@@ -47,7 +47,7 @@ Data flow: `Web → Application → AT adapter / app-index → Web`. Dependency 
 ### `packages/protocol` — shared domain (the gate)
 The domain schemas and test vectors every other component agrees on: identity,
 content reference, vote, reward period, pending allocation, claim. Owning a stable
-schema+vector set here is what lets the other five components be built and tested
+schema+vector set here lets the other five components be built and tested
 in parallel. **Owns: schemas and vectors.**
 
 ### AT adapter — middleware
@@ -58,7 +58,7 @@ fixture. Everything downstream can trust that a record's provenance is labeled.
 **Owns: normalization.**
 
 ### Attestation bridge — trust boundary
-The one deliberately-trusted seam. It observes or retrieves an AT record, verifies
+The one deliberately trusted seam. It observes or retrieves an AT record, verifies
 the needed evidence, and attests the observed **DID + AT-URI + observed CID +
 evidence** to Koinos. It is explicitly forbidden from computing evaluations,
 applying the allocation curve, minting, or choosing recipients — those are
@@ -68,9 +68,9 @@ realized within the application-service and proof-script layers (U6/U7), not a
 standalone package. **Owns: attesting facts, nothing more.**
 
 ### Application service + read contract — `packages/application`, `packages/application-contracts`
-The application service assembles the combined product view the client reads —
+The application service assembles the product view the client reads —
 joining normalized AT records (from the adapter) with pending state (from
-app-index) — and holds no signing keys. `application-contracts` is the view/read
+app-index) — and has no signing keys. `application-contracts` is the view/read
 contract the web client and service agree on, so the frontend can be built against
 a stable shape while the service fills in. Built by U6/U2.
 **Owns: the product read view.**
@@ -108,8 +108,8 @@ this layer's starting point (U4 re-homes it into `apps/web`). **Owns: rendering.
 | Attestation bridge | `scripts/protocol-proof` (role) | scaffold |
 | Web client | `apps/web` (reference: `design/mockup`) | mockup built (standalone); not yet wired into `apps/web` |
 
-Only the `spike` contract (feasibility) and the mockup are actually built;
-everything else is an honest scaffold. `ROADMAP.md` tracks unit-by-unit status.
+Only the `spike` contract (feasibility) and the mockup are built; everything
+else is a scaffold. `ROADMAP.md` tracks unit-by-unit status.
 Deferred until the loop runs end-to-end: live AT OAuth writes, Koinos
 wallet/sponsorship, and deployed contracts on the testnet.
 
