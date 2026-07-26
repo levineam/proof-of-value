@@ -34,7 +34,7 @@ If you are the kind of person who enjoys attacking a mechanism, [§13 of the whi
 
 ## Prior art
 
-This is not a new category of mechanism. Quadratic funding, retroactive public goods funding, reputation-weighted budgets, peer allocation, contribution-graph scoring, and vote-escrow gauges all allocate shared budgets by collective judgment, and every one of them — like this design — reintroduces its own locus of judgment somewhere. What is unusual here is the combination of continuous, free-to-participant, open, per-item evaluation in both directions, which among prior systems only Steem's subjective proof of work achieved. Steem then collapsed, largely for architectural reasons that had little to do with that mechanism. This project isolates the mechanism on infrastructure chosen so it can be evaluated on its own terms. §3 and §11 of the paper make that case in full.
+This is not a new category of mechanism. Quadratic funding, retroactive public goods funding, reputation-weighted budgets, peer allocation, contribution-graph scoring, and vote-escrow gauges all allocate shared budgets by collective judgment, and every one of them — like this design — reintroduces its own locus of judgment somewhere. What is unusual here is the combination of continuous, free-to-participant, open, per-item evaluation in both directions, which among prior systems only Steem's "proof of brain" achieved. Steem then collapsed, for reasons that had little to do with that mechanism. This project isolates the mechanism on infrastructure chosen so it can be evaluated on its own terms. §3 and §11 of the paper make that case in full.
 
 ## License
 
