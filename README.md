@@ -6,7 +6,7 @@
 
 Blockchain consensus algorithms are technical infrastructure: they secure a ledger and meter its resources by charging for transactions. That model suits a financial system well and explains why, more than a decade in, DeFi remains the dominant use case for blockchains. The missing piece may be a **social consensus algorithm**: a decentralized way to leverage the wisdom of the crowd to value an arbitrary piece of information and distribute newly issued tokens according to that valuation. Because it runs on ordinary judgments rather than paid operators, it has to be free to use, require no expertise, and impose no barriers to entry — which is why a chain that charges for every small act of participation cannot host one.
 
-This makes possible **turnkey marketplaces for any abstract information**: any group can stand one up to reward the information its own members produce, according to its own idea of what is valuable. The product is the marketplace, not a token.
+This makes possible **turnkey marketplaces for any abstract information**: any group can stand one up to reward the information its own members produce, according to its own idea of what is valuable. 
 
 ## Start here
 
