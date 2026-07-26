@@ -1,13 +1,12 @@
 # Contributing to Proof of Value
 
-Thank you for taking a look. This is a private, collaboration-oriented
+Thank you for taking a look. This is a collaboration-oriented
 repository: the goal right now is not a finished product but a
 **collaboration-ready developer preview** — a repo where another engineer can
 understand the vision, run what exists, inspect the protocol boundaries, and
 find a concrete place to help.
 
-If you're reading this, you likely already have repository access. This
-document explains how the work is organized so you can find your track
+This document explains how the work is organized so you can find your track
 quickly.
 
 ## The parallel-workstream model
