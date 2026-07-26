@@ -3,7 +3,7 @@
 This roadmap tracks the nine implementation units from
 `docs/plans/2026-07-20-001-feat-parallel-prototype-foundation-plan.md`, the
 plan governing the collaboration-ready PoV developer preview. Status here
-reflects what is actually built versus designed — never product completion.
+reflects what is built versus designed, not product completion.
 
 ## Sequencing
 
@@ -17,14 +17,15 @@ reflects what is actually built versus designed — never product completion.
 
 ## Units
 
-### U1. Reproducible repository and toolchain foundation — **done**
+### U1. Reproducible repository and toolchain foundation — **network gate blocked**
 Turn the document repository into a cloneable workspace and prove the current
 Koinos compile/deploy/event path before shared schemas harden around it.
 **Status:** npm workspace and root tooling exist; the mockup source is
 tracked (`design/mockup/`); `contracts/koinos/spike/` builds and passes its
-test, with a probe script for deploying and decoding one event against a Koinos
-test network (the originally documented Harbinger endpoints are no longer
-served; the probe targets the current community testnet).
+local event test. Its probe script is ready to deploy and decode the same event
+on a Koinos test network, but no live deployment, invocation, or event retrieval
+has succeeded yet. U2 remains gated on that evidence; see
+`docs/development/toolchain-evidence.md` for the exact dependencies.
 
 ### U2. Versioned protocol and application contracts — designed, not built
 Define the stable protobuf, JSON, manifest, and application-view seams that
@@ -42,7 +43,7 @@ version provenance.
 ### U4. Import and refine the feed experience — mockup exists, not yet integrated
 Bring the existing mockup into the repository and turn it into a polished
 developer-preview surface backed by application interfaces.
-**Status:** the standalone mockup (`design/mockup/`) is built and running with
+**Status:** the standalone mockup (`design/mockup/`) is built and runs with
 browser-local state and a hard-coded reward calculation; it has not yet been
 reconstructed into `apps/web/` against `@pov/application-contracts`. A
 skeletal `apps/web/app` directory exists but is not yet the integrated
@@ -68,11 +69,11 @@ Demonstrate the architectural thesis with one real cross-protocol thread
 visible in the web client.
 **Status:** `tests/protocol-proof/` and `scripts/protocol-proof/` are
 scaffolded. No fact attestation or evaluation has been recorded on Harbinger
-beyond U1's unrelated feasibility event; no proof manifest exists yet.
+or another Koinos test network; no proof manifest exists yet.
 
 ### U8. Contributor-facing project package — in progress
-Make the repository understandable, reviewable, and inviting to
-prospective collaborators.
+Make the repository understandable and reviewable for prospective
+collaborators.
 **Status:** `ARCHITECTURE.md`, this `ROADMAP.md`, and `CONTRIBUTING.md` exist.
 `docs/development/getting-started.md`, `component-map.md`, `open-questions.md`,
 `demo-script.md`, `upgrades.md`, and `.github/CODEOWNERS` are not yet written.
@@ -80,8 +81,8 @@ The outbound license is **MIT** (`LICENSE`). Inbound contribution terms (plan
 R23) still need to be stated before external contributions are accepted.
 
 ### U9. Collaborator-facing read-only deployment — designed, not built
-Give prospective contributors a low-friction hosted view of the feed and
-protocol evidence without widening signing or operational authority.
+Give prospective contributors a hosted, read-only view of the feed and protocol
+evidence without widening signing or operational authority.
 **Status:** not started. No deployment exists yet, hosted or otherwise.
 
 ## What "done" means here

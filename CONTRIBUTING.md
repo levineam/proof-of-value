@@ -1,13 +1,12 @@
 # Contributing to Proof of Value
 
-Thank you for taking a look. This is a collaboration-oriented
-repository: the goal right now is not a finished product but a
-**collaboration-ready developer preview** — a repo where another engineer can
+This is a collaboration-oriented repository: the goal right now is not a
+finished product but a **collaboration-ready developer preview** — a repo where
+another engineer can
 understand the vision, run what exists, inspect the protocol boundaries, and
 find a concrete place to help.
 
-This document explains how the work is organized so you can find your track
-quickly.
+This document explains how the work is organized and where to start.
 
 ## The parallel-workstream model
 
@@ -16,10 +15,11 @@ deliberately sequences two narrow gates before opening parallel tracks:
 
 1. **Feasibility gate (U1).** Prove the Koinos toolchain can compile, deploy,
    and retrieve an event from Harbinger before anything else depends on it.
-   This is done — see `contracts/koinos/spike/`.
+   The local build and event test pass, but the live test-network round trip is
+   still blocked — see `docs/development/toolchain-evidence.md`.
 2. **Shared contracts gate (U2).** Freeze the protobuf/JSON protocol seam and
    the application read contract so the tracks below don't have to invent
-   their own shared boundary independently. This is designed, not yet built —
+   their own shared boundary. This is designed, not yet built —
    see `spec/protocol/` and `packages/protocol/`.
 
 Once both gates land, four tracks advance **in parallel**, all depending
@@ -52,8 +52,8 @@ See `ROADMAP.md` for the full unit sequence and current status of each.
 
 ## Running what exists today
 
-Two things in this repository are actually built and tested; everything else
-described above is a scaffold or design surface, not yet built.
+Two things in this repository are built and tested; everything else is a
+scaffold or design surface, not yet built.
 
 **The Koinos feasibility spike** (built, passing test):
 ```sh
