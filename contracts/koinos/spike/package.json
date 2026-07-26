@@ -1,6 +1,7 @@
 {
   "name": "spike",
   "version": "0.1.0",
+  "packageManager": "yarn@1.22.22",
   "license": "MIT",
   "type": "module",
   "dependencies": {
@@ -23,8 +24,8 @@
   },
   "scripts": {
     "lint": "eslint --max-warnings 0 --ext ts \"*/assembly/**/*.ts\"",
-    "build:debug": "koinos-sdk-as-cli build-all debug 0 spike.proto",
-    "build:release": "koinos-sdk-as-cli build-all release 0 spike.proto",
+    "build:debug": "mkdir -p abi build/debug && koinos-sdk-as-cli build-all debug 0 spike.proto",
+    "build:release": "mkdir -p abi build/release && koinos-sdk-as-cli build-all release 0 spike.proto",
     "test": "koinos-sdk-as-cli run-tests && node --test scripts/*.test.mjs",
     "probe": "yarn build:release && node scripts/harbinger-probe.mjs"
   }
