@@ -2,7 +2,7 @@
 
 **Public draft for comment.** Not an offer, not investment advice, and not ready for implementation. The mechanism is a proposal; its central questions are open and stated as such.
 
-## The idea in three sentences
+## Summary
 
 Blockchain consensus algorithms are technical infrastructure — they secure a ledger and meter its resources by charging for transactions, which aligns a financial system well and explains why, more than a decade in, finance is nearly the only thing decentralization has produced. The missing piece may be a **social consensus algorithm**: a decentralized way to leverage the wisdom of the crowd to value an arbitrary piece of information and distribute newly issued tokens according to that valuation. Because it runs on ordinary judgments rather than paid operators, it has to be free to use, require no expertise, and impose no barriers to entry — which is why a chain that charges for every small act of participation cannot host one.
 
