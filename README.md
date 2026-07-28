@@ -25,7 +25,7 @@ Very little, deliberately, and the repository is labeled accordingly. A Koinos s
 
 ## Prior art
 
-Quadratic funding, retroactive public goods funding, reputation-weighted budgets, peer allocation, contribution-graph scoring, and vote-escrow gauges all allocate shared budgets by collective judgment, and every one of them — like this design — reintroduces its own locus of judgment somewhere. What is unusual here is the combination of continuous, free-to-participant, open, per-item evaluation in both directions, which among prior systems only Steem's “Proof of Brain” achieved. Steem later failed through a mix of chain, governance, and reward-mechanism failures. This project isolates the mechanism on infrastructure chosen so it can be evaluated on its own terms. §3 and §11 of the paper make that case in full.
+Quadratic funding, retroactive public goods funding, reputation-weighted budgets, peer allocation, contribution-graph scoring, and vote-escrow gauges all allocate shared budgets by collective judgment. What is unusual here is the combination of continuous, free-to-participant, open, per-item evaluation in both directions, which among prior systems only Steem's “Proof of Brain” achieved. Steem later failed through a mix of chain, governance, and reward-mechanism failures. This project isolates the mechanism on infrastructure chosen so it can be evaluated on its own terms. §3 and §11 of the paper make that case in full.
 
 ## License
 
