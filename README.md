@@ -23,18 +23,9 @@ Supporting material: the [primary-source audit](docs/source-audit.md) grounding 
 
 Very little, deliberately, and the repository is labeled accordingly. A Koinos spike contract builds, emits, and decodes an event with a passing test. A feed mockup runs on browser-local state. Every other component — the protocol package, AT adapter, attestation bridge, application index, and the token, identity, and reward contracts — is a scaffold with a README stating its single responsibility. Nothing claims to be finished that is not. See [ROADMAP.md](ROADMAP.md) for the per-unit breakdown.
 
-## Unresolved
-
-If you enjoy attacking a mechanism, [§13 of the white paper](WHITEPAPER.md) is the fastest route in. The questions the project most wants answered:
-
-- **Does unpaid evaluation work?** Version one pays authors only, so honest evaluation is economically altruistic. Steem's curation rewards solved this and created its worst gaming surface.
-- **Is a settlement-period lock real skin in the game?** A vote immobilizes stake, but the voter never *loses* for being wrong — nothing resolves, unlike a position in a prediction market.
-- **Does it survive machine-generated content and machine-delegated voting?** Nothing here establishes personhood, and automation makes trustworthy judgment scarcer rather than more valuable.
-- **Do the revisions actually fix what buried Steem?** Vote-buying, self-dealing, and retaliatory downvoting are properties of stake-weighted continuous voting, not of the chain beneath it. Changing chains does nothing for them.
-
 ## Prior art
 
-This is not a new category of mechanism. Quadratic funding, retroactive public goods funding, reputation-weighted budgets, peer allocation, contribution-graph scoring, and vote-escrow gauges all allocate shared budgets by collective judgment, and every one of them — like this design — reintroduces its own locus of judgment somewhere. What is unusual here is the combination of continuous, free-to-participant, open, per-item evaluation in both directions, which among prior systems only Steem's “Proof of Brain” achieved. Steem later failed through a mix of chain, governance, and reward-mechanism failures. This project isolates the mechanism on infrastructure chosen so it can be evaluated on its own terms. §3 and §11 of the paper make that case in full.
+Quadratic funding, retroactive public goods funding, reputation-weighted budgets, peer allocation, contribution-graph scoring, and vote-escrow gauges all allocate shared budgets by collective judgment, and every one of them — like this design — reintroduces its own locus of judgment somewhere. What is unusual here is the combination of continuous, free-to-participant, open, per-item evaluation in both directions, which among prior systems only Steem's “Proof of Brain” achieved. Steem later failed through a mix of chain, governance, and reward-mechanism failures. This project isolates the mechanism on infrastructure chosen so it can be evaluated on its own terms. §3 and §11 of the paper make that case in full.
 
 ## License
 
