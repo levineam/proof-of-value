@@ -19,9 +19,9 @@ This makes possible **turnkey marketplaces for any abstract information**: any g
 
 Supporting material: the [primary-source audit](docs/source-audit.md) grounding the paper's protocol claims, and the [diagram specification](docs/architecture-diagram-spec.md) governing the [architecture infographic](assets/proof-of-value-architecture.png).
 
-## What actually exists today
+## Complete
 
-Very little, deliberately, and the repository is labeled accordingly. A Koinos spike contract builds, emits, and decodes an event with a passing test. A feed mockup runs on browser-local state. Every other component — the protocol package, AT adapter, attestation bridge, application index, and the token, identity, and reward contracts — is a scaffold with a README stating its single responsibility. Nothing claims to be finished that is not. See [ROADMAP.md](ROADMAP.md) for the per-unit breakdown.
+A Koinos spike contract builds, emits, and decodes an event with a passing test. A feed mockup runs on browser-local state. Every other component — the protocol package, AT adapter, attestation bridge, application index, and the token, identity, and reward contracts — is a scaffold with a README stating its single responsibility. Nothing claims to be finished that is not. See [ROADMAP.md](ROADMAP.md) for the per-unit breakdown.
 
 ## Prior art
 
