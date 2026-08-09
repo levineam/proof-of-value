@@ -2,5 +2,9 @@
   "name": "@pov/application-contracts",
   "version": "0.0.0",
   "private": true,
-  "description": "Framework-neutral application read-contract (feed/detail/proof-evidence view types) shared by the web client and application service."
+  "description": "Framework-neutral, browser-safe Swarm feed read contracts.",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "scripts": { "build": "npm run build --workspace=@pov/protocol && tsc -p tsconfig.json", "test": "npm run build && node --test test/*.test.mjs" },
+  "dependencies": { "@pov/protocol": "*" }
 }

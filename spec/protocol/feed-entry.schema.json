@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://proof-of-value.org/schema/feed-entry/v1",
+  "title": "Versioned Swarm feed admission fact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["admissionId", "subject", "decision", "policyVersion", "authority", "observedAt", "reasonCategory", "idempotencyKey"],
+  "properties": {
+    "admissionId": { "type": "string", "minLength": 8 },
+    "subject": { "type": "object", "additionalProperties": false, "required": ["uri", "cid"], "properties": { "uri": { "type": "string", "pattern": "^at://did:[^/]+/app\\.bsky\\.feed\\.post/" }, "cid": { "type": "string", "minLength": 1 } } },
+    "decision": { "enum": ["admitted", "pending", "rejected", "revoked"] },
+    "policyVersion": { "type": "string", "minLength": 1 },
+    "authority": { "enum": ["system", "moderator", "member"] },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "reasonCategory": { "enum": ["eligible", "review", "policy", "spam", "withdrawn", "unknown"] },
+    "idempotencyKey": { "type": "string", "minLength": 16, "maxLength": 128, "pattern": "^[A-Za-z0-9_-]+$" }
+  }
+}

@@ -1,0 +1,1 @@
+{"kind":"admission","valid":true,"value":{"admissionId":"admission-001","subject":{"uri":"at://did:plc:swarm/app.bsky.feed.post/3kz","cid":"bafyPost2"},"decision":"pending","policyVersion":"2026-08-1","authority":"system","observedAt":"2026-08-09T12:05:00Z","reasonCategory":"review","idempotencyKey":"admit_9bK7wN3sT5yH"}}

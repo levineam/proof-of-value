@@ -28,4 +28,6 @@ PoV contract is implemented.
 
 ## Status
 
-Status: scaffold — not yet implemented.
+Status: partially implemented — `swarm-feed/` contains executable positive and
+negative vectors for publication, admission, lifecycle, tombstones, and safe
+application views. Protobuf wire-vector coverage remains proposed.

@@ -1,0 +1,1 @@
+{"kind":"lifecycle","valid":true,"value":{"did":"did:plc:swarm","pds":"https://new-pds.example","state":"migrated","observedAt":"2026-08-09T12:11:00Z","ordering":{"sequence":6,"commit":"c6"},"repositoryRevision":"c6"}}

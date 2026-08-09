@@ -1,0 +1,1 @@
+{"kind":"lifecycle","valid":false,"value":{"did":"did:plc:swarm","pds":"https://pds.example","state":"deleted","observedAt":"2026-08-09T12:10:00Z","ordering":{"sequence":5},"tombstone":{"uri":"at://did:plc:swarm/app.bsky.feed.post/3kz","lastKnownCid":"bafyPost1","observedAt":"2026-08-09T12:10:00Z","text":"must not survive"}}}
