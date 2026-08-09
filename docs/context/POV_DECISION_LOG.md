@@ -1,6 +1,6 @@
 # Proof of Value — Decision Log
 
-**Updated:** 2026-07-29
+**Updated:** 2026-08-09
 
 This log records how the current direction emerged. Newer decisions supersede
 older ones only where they conflict; enduring principles remain in force.
@@ -21,6 +21,31 @@ Current working direction:
 
 This supersedes the dual-marketplace design as the MVP scope. It does not erase
 the long-term plural-marketplace thesis.
+
+## 2026-08-09 — Make the Swarm account and ordinary post the market-entry surface
+
+**Source:** Andrew's follow-up on newcomer onboarding, ordinary social posts,
+and the Koinos Nicknames question.
+
+Accepted direction for the foundation:
+
+- Start with one self-referential Swarm feed about building, testing,
+  documenting, and critiquing Proof of Value.
+- Let a newcomer encounter the Swarm account and feed without requiring an
+  existing AT Protocol or Bluesky account. The intended account is AT-backed;
+  provisioning and hosting remain proposed until their operational gate is
+  proven.
+- Use ordinary `app.bsky.feed.post` records as the content shape. Swarm layers
+  feed admission, ranking, moderation, voting, allocation, and provenance on
+  top of the AT record rather than pretending those facts are AT content.
+- The foundation may use fixtures and simulations, but does not claim live
+  PDS operation, OAuth, account creation, post publication, moderation, or
+  settlement.
+- Koinos Nicknames may later provide an optional label beside a verified
+  Koinos settlement address. It is not the Swarm handle, AT identity, record
+  key, or authorization input.
+
+This does not settle eligibility, economics, moderation, or success metrics.
 
 ## 2026-07-28 — Use the dual-marketplace mockup as a vision artifact
 

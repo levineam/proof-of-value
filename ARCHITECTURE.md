@@ -1,121 +1,92 @@
 # Proof of Value — Architecture
 
-The system is one deployable monorepo of independently testable components, split
-into six layers with a strict dependency order. Content and identity live on **AT
-Protocol**; stake-linked accounting and settlement live on **Koinos**; an explicit
-**attestation bridge** carries facts between them and is trusted to do nothing
-more. This document is the component map; the mechanism itself is specified in
-[WHITEPAPER.md](./WHITEPAPER.md) (see §5, "Reference architecture").
+## Status and product boundary
 
-> Status: this baseline comes from the "POV Consolidation" compound-engineering
-> pass (ce-brainstorm → ce-plan → ce-work, July 2026). The spike contract and web
-> client exist; the middle layers are designed and being scaffolded. Each
-> component below is a directory with its own README stating its single
-> responsibility, so the whole architecture is legible from the repo tree.
+This is the proposed architecture for **Swarm**, the first Proof of Value
+marketplace: one feed for people building, testing, documenting, and critiquing
+Proof of Value. It describes boundaries the repository is preparing to build;
+it is not a report of live infrastructure.
 
-## Layers
+**Implemented:** a browser-local design mockup and a locally tested Koinos
+spike. **Simulated:** the mockup's feed, votes, and allocations.
+**Proposed:** the single-feed application and the authority split below.
+**Blocked:** a live Koinos testnet round trip is unproven. **Deferred:** account
+provisioning, OAuth, PDS operation, live posting, moderation operations, and
+live settlement.
+
+AT Protocol is canonical for account identity and ordinary public post records.
+Swarm owns feed admission, moderation policy, ranking, and PoV views. Koinos is
+the reference future settlement path; it is neither the product nor a proven
+live dependency.
+
+For the market-entry story, read [docs/product/SWARM_MVP.md](docs/product/SWARM_MVP.md).
+For SWARM mechanism details, read [WHITEPAPER.md](WHITEPAPER.md).
+
+## Proposed authority topology
 
 ```mermaid
-flowchart TD
-    subgraph OFFCHAIN["Off-chain (AT Protocol side)"]
-        WEB["Web client — apps/web<br/>owns: rendering + provenance labels"]
-        IDX["app-index — indexer<br/>owns: versioned event decoding"]
-        ADP["AT adapter — middleware<br/>owns: normalization of live AT reads"]
-    end
-    subgraph BRIDGE["Trust boundary"]
-        BR["Attestation bridge<br/>attests DID+URI+CID+evidence · never computes rewards"]
-    end
-    subgraph ONCHAIN["On-chain (Koinos side)"]
-        LED["Reward ledger — Koinos contracts<br/>token · identity-link · evaluation · settlement · claim"]
-    end
-    PROTO["packages/protocol<br/>shared schemas + test vectors (the gate)"]
-
-    WEB --> IDX --> LED
-    WEB --> ADP --> BR --> LED
-    PROTO -.schemas.-> WEB
-    PROTO -.schemas.-> ADP
-    PROTO -.schemas.-> BR
-    PROTO -.schemas.-> LED
-    PROTO -.schemas.-> IDX
+flowchart TB
+  MEMBER[Swarm member] --> WEB[Swarm web shell]
+  WEB --> APP[Application service]
+  APP --> VIEW[Derived Swarm feed view]
+  HOST[Proposed account host] --> AT[AT Protocol repository\nDID + app.bsky.feed.post]
+  MEMBER -. future member authorization .-> AT
+  AT --> OBS[AT observation adapter]
+  ADM[Feed-admission fact authority] --> IDX[Rebuildable app index]
+  OBS --> IDX
+  IDX --> VIEW
+  POV[PoV evaluation / allocation authority] --> VIEW
+  KOINOS[Future Koinos settlement] -. canonical settlement only .-> VIEW
 ```
 
-Data flow: `Web → Application → AT adapter / app-index → Web`. Dependency order:
-`contracts → ledger / fixtures / adapters → web`.
+The dotted paths are proposed future operations. The browser must never hold a
+PDS administrative credential, provisioning authority, or a broad shared
+signing key. A member-authorized AT action is separate from any server-side
+account-provisioning authority. AT content, a Swarm admission decision, a
+derived index entry, and a settlement result retain separate provenance.
 
-## Components
+## Components and maturity
 
-### `packages/protocol` — shared domain (the gate)
-The domain schemas and test vectors every other component agrees on: identity,
-content reference, vote, reward period, pending allocation, claim. Owning a stable
-schema+vector set here lets the other five components be built and tested
-in parallel. **Owns: schemas and vectors.**
+| Component | Responsibility | Current state |
+| --- | --- | --- |
+| `apps/web` | Future single-feed product shell and provenance display | **Implemented:** placeholder only; single-feed shell **proposed** |
+| `packages/at-client` | Future member-authorized AT actions | **Proposed**; not yet created |
+| `packages/at-adapter` | Public AT observations and lifecycle normalization | **Proposed** scaffold; no live reads |
+| Feed-admission authority | Versioned admission and revocation facts | **Proposed**; no authority exists |
+| `packages/app-index` | Rebuildable projection of observations and admission facts | **Proposed** scaffold; no index exists |
+| `packages/application` | Assemble the product read view | **Proposed** scaffold; no service exists |
+| PoV evaluation/allocation | Evaluation and allocation provenance | **Proposed**; mockup values are **simulated** |
+| Koinos contracts | Future locks, settlement, and claims | **Proposed**; the isolated `spike` is **implemented** local feasibility evidence |
+| `design/mockup` | Dual-marketplace visual and interaction research | **Implemented** browser-local historical vision; not active product scope |
 
-### AT adapter — middleware
-Normalizes live reads from AT Protocol / Bluesky (`public.api.bsky.app`, OAuth
-handled server-side). Returns an explicit state for every record —
-`live / stale / unavailable / invalid` — and **never** silently falls back to a
-fixture. Everything downstream can trust that a record's provenance is labeled.
-**Owns: normalization.**
+## Canonical and derived data
 
-### Attestation bridge — trust boundary
-The one deliberately trusted seam. It observes or retrieves an AT record, verifies
-the needed evidence, and attests the observed **DID + AT-URI + observed CID +
-evidence** to Koinos. It is explicitly forbidden from computing evaluations,
-applying the allocation curve, minting, or choosing recipients — those are
-deterministic contract logic. Its residual power (it can omit, delay, or
-mis-attest) must be observable and replaceable. See WHITEPAPER §5. It is a *role*
-realized within the application-service and proof-script layers (U6/U7), not a
-standalone package. **Owns: attesting facts, nothing more.**
+An ordinary Swarm post is intended to be an `app.bsky.feed.post` in the
+author's AT repository. A DID-based AT URI identifies the logical record and an
+observed CID identifies the evaluated version. An edit must not silently change
+an evaluated object.
 
-### Application service + read contract — `packages/application`, `packages/application-contracts`
-The application service assembles the product view the client reads —
-joining normalized AT records (from the adapter) with pending state (from
-app-index) — and has no signing keys. `application-contracts` is the view/read
-contract the web client and service agree on, so the frontend can be built against
-a stable shape while the service fills in. Built by U6/U2.
-**Owns: the product read view.**
+Swarm does not make its application database the canonical copy of a post.
+Instead, it will record feed-admission facts separately, then rebuild a derived
+feed view from AT observations, admission facts, lifecycle observations, and
+the selected PoV authority. A public post may exist even when it is not admitted
+to Swarm; removing it from the feed cannot erase it from AT Protocol.
 
-### Reward ledger — Koinos contracts (backend)
-The on-chain core: upgradeable token, identity-link, evaluation, settlement, and
-claim contracts, with deterministic reward accounting. Votes commit a locked stake
-fraction; settlement allocates the period's issuance via the convergent curve and
-unlocks committed stake; author DIDs accrue rewards and later claim them.
-**Owns: command/event conformance.** (A working `spike` contract with a passing
-AS-pect test and an emitted/decoded protobuf event already exists.)
+## Operational gate before real accounts
 
-### app-index — indexer
-A noncanonical read model that reconstructs pending state (locks, evaluations,
-allocations) from canonical Koinos events to serve the client and a SWARM-ranked
-feed. It is **not** the financial record — the chain is. **Owns: versioned
-decoding.**
+No production PDS has been selected or operated. Before Swarm provisions an
+account, the project needs an explicit account-hosting review covering custody,
+recovery, migration, separate app and PDS domains, backups, PLC recovery keys,
+invite and spam controls, moderation and appeals, emergency actions, audit
+evidence, and deletion/retention behavior. Future OAuth must use narrowly
+scoped, server-held authorization material and bind the returned DID to the
+authorized transaction.
 
-### Web client — frontend (`apps/web`)
-The user-facing client: displays real AT content and Koinos state, supports login,
-account linking, voting, and claims, and labels every field with its provenance
-(`live / stale / …`). The current mockup in [`design/mockup/`](./design/mockup) is
-this layer's starting point (U4 re-homes it into `apps/web`). **Owns: rendering.**
+## Historical artifacts
 
-## Build status
-
-| Component | Directory | State |
-|---|---|---|
-| Protocol / vectors | `packages/protocol`, `spec/` | scaffold |
-| Application contracts | `packages/application-contracts` | scaffold |
-| AT adapter | `packages/at-adapter` | scaffold |
-| Application service | `packages/application` | scaffold |
-| app-index | `packages/app-index` | scaffold |
-| Koinos contracts | `contracts/koinos/{pov,token,identity}` | scaffold — only `spike` is built + passing test |
-| Attestation bridge | `scripts/protocol-proof` (role) | scaffold |
-| Web client | `apps/web` (reference: `design/mockup`) | mockup built (standalone); not yet wired into `apps/web` |
-
-Only the `spike` contract (feasibility) and the mockup are built; everything
-else is a scaffold. `ROADMAP.md` tracks unit-by-unit status.
-Deferred until the loop runs end-to-end: live AT OAuth writes, Koinos
-wallet/sponsorship, and deployed contracts on the testnet.
-
-## Provenance
-
-This map consolidates the compound-engineering plan
-(`docs/plans/2026-07-20-001-feat-parallel-prototype-foundation-plan.md`, units
-U1–U9) and WHITEPAPER §5. That plan is the more detailed source for
-implementation sequencing and per-unit acceptance criteria.
+The [dual-marketplace mockup](design/mockup/README.md) demonstrates the longer
+term idea of many marketplaces sharing one mechanism. The July
+[parallel-prototype plan](docs/plans/2026-07-20-001-feat-parallel-prototype-foundation-plan.md)
+records earlier protocol-first sequencing. Both remain available, but the
+[August market-entry plan](docs/plans/2026-08-04-001-feat-swarm-market-entry-foundation-plan.md)
+is the current implementation authority.

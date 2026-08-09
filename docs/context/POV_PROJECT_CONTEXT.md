@@ -2,7 +2,7 @@
 
 **Status:** Authoritative working context for Proof of Value work
 
-**Updated:** 2026-07-31
+**Updated:** 2026-08-09
 
 **Canonical implementation repository:** `/Users/andrew/proof-of-value`
 
@@ -45,8 +45,12 @@ distribution.
 
 The current working direction is one narrow, self-referential marketplace:
 
-- A simple feed dedicated to people exploring, building, testing, documenting,
-  and critiquing Proof of Value.
+- A simple **Swarm** feed dedicated to people exploring, building, testing,
+  documenting, and critiquing Proof of Value.
+- A newcomer should be able to read and understand the feed without an
+  existing AT Protocol or Bluesky account. The intended future account is
+  backed by an AT Protocol identity, but account provisioning and hosting are
+  still proposed rather than operational.
 - Feed items are real AT Protocol / Bluesky records. Whether an AT record can
   nominate eligible off-platform work remains open.
 - The PoV client adds upvotes, downvotes, allocation budgets, pending results,
@@ -62,6 +66,12 @@ The current working direction is one narrow, self-referential marketplace:
 The first contribution set may include research, critiques, rebuttals, code,
 design proposals, issues, review comments, documentation, and experiments.
 Exactly how non-AT artifacts are nominated through AT records is still open.
+
+The active market-entry path is documented in
+`docs/product/SWARM_MVP.md` and the August 2026 implementation plan. The older
+dual-marketplace mockup and July protocol-first plan remain historical evidence;
+they do not imply that a Swarm account, live post publication, live moderation,
+or Koinos settlement currently exists.
 
 This first marketplace is meant to prove that the loop can complete and that
 people will participate. A small founder-led cohort cannot prove that

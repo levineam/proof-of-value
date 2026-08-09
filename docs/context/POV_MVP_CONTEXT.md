@@ -21,6 +21,10 @@ initially a general-purpose social network or token market.
 
 ## Current working MVP
 
+- Present the project through one self-referential **Swarm** feed. Reading must
+  not depend on a newcomer already having an AT Protocol or Bluesky account;
+  the intended Swarm account is AT-backed, while provisioning and hosting stay
+  proposed until the operational gate is complete.
 - Display a small, curated feed of project-relevant AT Protocol / Bluesky posts.
 - Admit content through an allowlist of participating authors and manually
   submitted post URLs.
@@ -36,6 +40,9 @@ initially a general-purpose social network or token market.
 AT Protocol supplies identity and content:
 
 - Authors publish normal Bluesky/AT Protocol posts.
+- An ordinary post is canonical in the author's AT repository; Swarm adds
+  admission, ranking, moderation, voting, allocation, and provenance as
+  application-owned or derived facts.
 - The PoV application selects eligible posts and presents them as a focused
   feed.
 - PoV owns voting, allocation budgets, settlement, rewards, and token logic.
