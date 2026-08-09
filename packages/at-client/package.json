@@ -1,0 +1,12 @@
+{
+  "name": "@pov/at-client",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Dependency-free, server-side port for future authorized AT member actions.",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test test/*.test.mjs"
+  }
+}
