@@ -27,11 +27,24 @@ test("publication succeeds only with URI and CID", async () => {
   const result = await createFakeAtClient().publish(request);
   assert.equal(result.state, "succeeded");
   if (result.state === "succeeded") assert.match(result.uri, /^at:\/\/did:/);
-  assert.equal(publicationFromResponse(request, { cid: "cid-only" }).state, "failed");
-  assert.equal(publicationFromResponse(request, { uri: "at://did:plc:member/app.bsky.feed.post/record-1" }).state, "failed");
+  const cidOnly = publicationFromResponse(request, { cid: "cid-only" });
+  assert.equal(cidOnly.state, "unknown");
+  if (cidOnly.state === "unknown") assert.equal(cidOnly.retryBlocked, true);
+  const uriOnly = publicationFromResponse(request, { uri: "at://did:plc:member/app.bsky.feed.post/record-1" });
+  assert.equal(uriOnly.state, "unknown");
+  if (uriOnly.state === "unknown") assert.equal(uriOnly.retryBlocked, true);
+  const wrongRecord = publicationFromResponse(request, { uri: "at://did:plc:member/app.bsky.feed.post/record-2", cid: "bafywrongrecord" });
+  assert.deepEqual(wrongRecord, {
+    state: "unknown", recordKey: request.recordKey, idempotencyKey: request.idempotencyKey, diagnostic: "publication-unknown", retryBlocked: true
+  });
   assert.deepEqual(publicationFromResponse(request, { uri: "at://did:plc:other/app.bsky.feed.post/record-1", cid: "bafywrongowner" }), {
     state: "failed", recordKey: request.recordKey, idempotencyKey: request.idempotencyKey, diagnostic: "returned-did-mismatch"
   });
+});
+
+test("a post-create partial response blocks blind retry", async () => {
+  const outcome = await createFakeAtClient({ publish: "partial" }).publish(request);
+  assert.deepEqual(outcome, { state: "unknown", recordKey: request.recordKey, idempotencyKey: request.idempotencyKey, diagnostic: "publication-unknown", retryBlocked: true });
 });
 
 test("publication and reconciliation outcomes never serialize member capability or draft content", async () => {

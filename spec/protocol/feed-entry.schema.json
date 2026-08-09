@@ -7,7 +7,7 @@
   "required": ["admissionId", "subject", "decision", "policyVersion", "authority", "observedAt", "reasonCategory", "idempotencyKey"],
   "properties": {
     "admissionId": { "type": "string", "minLength": 8 },
-    "subject": { "type": "object", "additionalProperties": false, "required": ["uri", "cid"], "properties": { "uri": { "type": "string", "pattern": "^at://did:[^/]+/app\\.bsky\\.feed\\.post/" }, "cid": { "type": "string", "minLength": 1 } } },
+    "subject": { "type": "object", "additionalProperties": false, "required": ["uri", "cid"], "properties": { "uri": { "type": "string", "pattern": "^at://did:[a-z0-9]+:[A-Za-z0-9._:%-]+/app\\.bsky\\.feed\\.post/[A-Za-z0-9._-]+$" }, "cid": { "type": "string", "minLength": 1 } } },
     "decision": { "enum": ["admitted", "pending", "rejected", "revoked"] },
     "policyVersion": { "type": "string", "minLength": 1 },
     "authority": { "enum": ["system", "moderator", "member"] },

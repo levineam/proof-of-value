@@ -26,3 +26,21 @@ test("observation selection is identity- and resolution-scoped", () => {
   assert.equal(selectAuthoritativeObservation(current, stalePds, resolution)?.did, current.did);
   assert.equal(selectAuthoritativeObservation(stalePds, stalePds, resolution), undefined);
 });
+
+test("runtime validators reject schema-invalid nested fields", () => {
+  const admission = {
+    admissionId: "short",
+    subject: { uri: "at://did:plc:swarm/app.bsky.feed.post/3kz", cid: "bafyPost1" },
+    decision: "admitted", policyVersion: "2026-08-1", authority: "system",
+    observedAt: "2026-08-09T12:00:00Z", reasonCategory: "eligible", idempotencyKey: "admit_9bK7wN3sT5yH"
+  };
+  assert.equal(validateAdmission(admission).ok, false);
+  assert.equal(validateLifecycleObservation({
+    did: "did:plc:swarm", pds: "https://pds.example", state: "inactive", observedAt: "2026-08-09T12:00:00Z",
+    ordering: { sequence: 7, commit: 7 }
+  }).ok, false);
+  assert.equal(validateLifecycleObservation({
+    did: "did:plc:swarm", pds: "https://pds.example", state: "deleted", observedAt: "2026-08-09T12:00:00Z",
+    ordering: { sequence: 7 }, tombstone: "not-an-object"
+  }).ok, false);
+});

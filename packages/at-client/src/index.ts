@@ -77,7 +77,10 @@ export interface AuthorizedAtPort {
 }
 
 const did = (value: string): boolean => /^did:[a-z0-9]+:[A-Za-z0-9._:%-]+$/.test(value);
-const atUriDid = (value: string): string | undefined => /^at:\/\/(did:[^/]+)\/app\.bsky\.feed\.post\/[A-Za-z0-9._-]+$/.exec(value)?.[1];
+const atUriParts = (value: string): { did: string; recordKey: string } | undefined => {
+  const match = /^at:\/\/(did:[a-z0-9]+:[A-Za-z0-9._:%-]+)\/app\.bsky\.feed\.post\/([A-Za-z0-9._-]+)$/.exec(value);
+  return match ? { did: match[1], recordKey: match[2] } : undefined;
+};
 const nonEmpty = (value: string): boolean => value.trim().length > 0;
 const sameActions = (actions: readonly string[]): boolean => actions.length === 1 && actions[0] === "create";
 
@@ -99,12 +102,12 @@ export function validatePublishRequest(request: PublishRequest): PublishFailureD
 export function publicationFromResponse(input: Pick<PublishRequest, "actorDid" | "recordKey" | "idempotencyKey">, response: { uri?: string; cid?: string }): PublicationOutcome {
   const { actorDid, recordKey, idempotencyKey } = input;
   const correlation = { recordKey, idempotencyKey };
-  const returnedDid = atUriDid(response.uri ?? "");
-  if (returnedDid !== undefined && returnedDid !== actorDid) {
+  const returned = atUriParts(response.uri ?? "");
+  if (returned !== undefined && returned.did !== actorDid) {
     return { state: "failed", ...correlation, diagnostic: "returned-did-mismatch" };
   }
-  if (returnedDid === undefined || !nonEmpty(response.cid ?? "")) {
-    return { state: "failed", ...correlation, diagnostic: "response-partial" };
+  if (returned === undefined || !nonEmpty(response.cid ?? "") || returned.recordKey !== recordKey) {
+    return { state: "unknown", ...correlation, diagnostic: "publication-unknown", retryBlocked: true };
   }
   return { state: "succeeded", ...correlation, uri: response.uri!, cid: response.cid! };
 }

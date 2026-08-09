@@ -161,16 +161,29 @@ function hasActualSecret(source) {
   const assignment = /(?:access[_-]?token|refresh[_-]?token|authorization[_-]?code|client[_-]?secret|private[_-]?key|wallet[_-]?key|pds[_-]?admin(?:istrator)?|api[_-]?key)\s*[=:]\s*["']?([^\s"',}]+)/ig;
   for (const match of uncommented.matchAll(assignment)) {
     const value = match[1].replace(/["'};,]+$/, "");
-    if (value && !/^(?:secret|redacted|example|placeholder|<[^>]+>)$/i.test(value)) return true;
+    const lineStart = uncommented.lastIndexOf("\n", match.index ?? 0) + 1;
+    const line = uncommented.slice(lineStart, uncommented.indexOf("\n", lineStart) < 0 ? undefined : uncommented.indexOf("\n", lineStart));
+    const isReference = /^(?:env\.)?[A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)*$/.test(value);
+    const isDeterministicFixture = /\.repeat\(\d+\)/.test(line);
+    if (value && !isReference && !isDeterministicFixture && !/^(?:secret|redacted|example|placeholder|test|<[^>]+>)$/i.test(value)) return true;
   }
   return false;
 }
 
+const credentialSourcePattern = /\.(?:[cm]?js|[cm]?ts|jsx?|tsx?|json|ya?ml|toml)$/i;
+
+export function credentialScanCandidates(files = trackedFiles()) {
+  return files.filter((file) => {
+    if (/(?:^|\/)(?:node_modules|dist|build|\.next)(?:\/|$)/.test(file)) return false;
+    if (file === "spec/vectors/swarm-feed/view-secret-invalid.json") return false;
+    return credentialSourcePattern.test(file) || /(?:^|\/)\.env(?:\.|$)/i.test(file);
+  });
+}
+
 export async function checkCredentialHygiene() {
-  const candidates = trackedFiles().filter((file) => file.startsWith("apps/web/") || /(?:^|\/)(?:fixtures?|test|tests|snapshots?|dist|build|\.next)(?:\/|$)|(?:^|\/)\.env(?:\.|$)|\.(?:json|log)$/i.test(file));
+  const candidates = credentialScanCandidates();
   const findings = [];
   for (const file of candidates) {
-    if (file === "spec/vectors/swarm-feed/view-secret-invalid.json") continue;
     const info = await stat(path.join(repositoryRoot, file));
     if (info.size > 1_000_000) continue;
     const source = await text(file);
