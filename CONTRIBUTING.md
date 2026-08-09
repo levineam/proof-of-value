@@ -48,9 +48,9 @@ npm test --workspace=@pov/web
 **The Koinos feasibility spike** (built, passing test):
 ```sh
 cd contracts/koinos/spike
-COREPACK_ENABLE_PROJECT_SPEC=0 yarn install
-COREPACK_ENABLE_PROJECT_SPEC=0 yarn build:release
-COREPACK_ENABLE_PROJECT_SPEC=0 yarn test
+COREPACK_ENABLE_PROJECT_SPEC=0 corepack yarn install
+COREPACK_ENABLE_PROJECT_SPEC=0 corepack yarn build:release
+COREPACK_ENABLE_PROJECT_SPEC=0 corepack yarn test
 ```
 See `contracts/koinos/README.md` for the optional credentialed Harbinger
 probe.

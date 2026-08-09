@@ -10,7 +10,7 @@ preserving that plan as protocol-history evidence.
    repository front door and label older artifacts as history. **Implemented
    foundation story:** the repository narrative, product brief, architecture,
    roadmap, and durable context now describe the Swarm market-entry boundary;
-   it does not make a feed runnable.
+   the runnable shell is delivered by U4.
 2. **U2 — contracts and fixtures:** define account, ordinary-post, feed
    admission, lifecycle, and provenance boundaries. **Implemented feed subset:**
    runtime validators, vectors, and a safe application view are runnable;
@@ -31,8 +31,11 @@ preserving that plan as protocol-history evidence.
    active contributor path, contracts, maturity, prerequisites, non-goals,
    acceptance examples, verification, and coordination points. **Implemented
    documentation foundation:** no underlying live service is implied.
-7. **U7 — foundation verification:** add repository-wide truth, link, and
-   boundary checks. **Proposed.**
+7. **U7 — foundation verification:** repository-wide truth, link, boundary,
+   credential-hygiene, and generated-artifact checks run through
+   `npm run verify:foundation`. **Implemented credential-free gate:** it runs
+   deterministic local package tests, typechecking, and the web build without
+   an AT/Koinos network probe.
 
 ## Current maturity
 
@@ -43,7 +46,7 @@ preserving that plan as protocol-history evidence.
 | Dual-marketplace mockup | **Simulated historical vision** | Browser-local data and hard-coded calculations in `design/mockup`; no AT or chain connection. |
 | AT identity, account, and publishing | **Proposed** | No PDS, OAuth flow, account creation, or live writes. |
 | Feed admission and application index | **Proposed** | Existing packages are scaffolds. |
-| PoV evaluation and allocation | **Proposed** | Mockup interactions are simulated, not settlement. |
+| PoV evaluation and allocation | **Simulated / proposed** | The shell and mockup show labeled local values; live policy and settlement are not implemented. |
 | Koinos spike | **Implemented local feasibility evidence** | Builds and passes its local event test. |
 | Live Koinos proof | **Blocked** | No successful testnet deploy, invoke, and event-retrieval round trip. |
 | Contributor workstreams | **Implemented documentation foundation** | Five packets describe bounded proposed work; they do not authorize live operations. |

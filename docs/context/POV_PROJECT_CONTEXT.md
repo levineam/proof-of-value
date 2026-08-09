@@ -168,23 +168,26 @@ proof back into two products.
 
 ## Honest implementation state
 
-As of 2026-07-29, the canonical repository was clean on `main` at `21dccea`.
+**Implemented:** U2's runnable Swarm contracts and vectors, U3's
+credential-free member-action contract, U4's fixture-backed single-feed shell,
+U5's middle-layer boundary documentation, U6's five workstream packets, U7's
+credential-free repository verification gate, the historical browser-local
+mockup, and a local Koinos spike event test.
 
-Built:
+**Simulated:** fixture feed state, local votes, and allocation values in the
+shell and historical mockup. They are not live AT, Swarm, or Koinos state.
 
-- A standalone browser-local feed mockup with hard-coded state.
-- A Koinos spike contract that builds and passes a local event test.
+**Proposed:** public AT observation, account provisioning/hosting, admission,
+the index and application service, evaluation policy, and settlement.
 
-Not built or not proven:
+**Blocked:** no successful live Koinos testnet deploy, invocation, and
+event-retrieval round trip has been proven.
 
-- No successful live Koinos testnet deploy/invoke/event-retrieval proof.
-- The protocol schemas, AT adapter, bridge, index, application service, and
-  production token/identity/reward contracts remain scaffolds.
-- The mockup is not integrated into the real web application.
-- No hosted preview or functioning end-to-end PoV loop exists.
+**Deferred:** production PDS/OAuth operations, live posting and moderation,
+token economics, and public launch. No hosted end-to-end PoV loop exists.
 
-The latest single-feed MVP direction has not yet been reconciled into the
-repository's older dual-marketplace mockup or implementation plan.
+The older dual-marketplace mockup remains a historical vision artifact, not the
+current MVP.
 
 ## Product and communication guardrails
 

@@ -17,11 +17,12 @@ In the intended design, a Swarm account is backed by an AT Protocol identity and
 an ordinary post is an `app.bsky.feed.post`; Swarm adds project-feed admission,
 evaluation, and allocation views around that public content.
 
-This is a proposed product direction, not a live service. The current
-[`apps/web`](apps/web) application is a developer placeholder, not the Swarm
-feed. Account creation, OAuth, PDS operation, post publication, moderation,
-and Koinos settlement are not built. The Koinos spike is local feasibility
-evidence only; no live testnet round trip has been proven.
+This is a proposed product direction, with a fixture-backed foundation rather
+than a live service. The current [`apps/web`](apps/web) application is the
+truthfully inert Swarm shell; it does not connect an account or network.
+Account creation, OAuth, PDS operation, post publication, moderation, and
+Koinos settlement are not built. The Koinos spike is local feasibility evidence
+only; no live testnet round trip has been proven.
 
 Read the concise product brief in [docs/product/SWARM_MVP.md](docs/product/SWARM_MVP.md),
 then the active market-entry [plan](docs/plans/2026-08-04-001-feat-swarm-market-entry-foundation-plan.md).
@@ -30,12 +31,12 @@ then the active market-entry [plan](docs/plans/2026-08-04-001-feat-swarm-market-
 
 ```bash
 npm install
-npm run build
+npm run verify:foundation
 ```
 
-That starts from the repository's existing web shell; it does not connect an AT
-account, publish a post, or settle a reward. The commands and their limits are
-also recorded in [ROADMAP.md](ROADMAP.md).
+This validates the fixture-first foundation without credentials or network
+access. It does not connect an AT account, publish a post, or settle a reward.
+The commands and their limits are also recorded in [ROADMAP.md](ROADMAP.md).
 
 | Document | What it is |
 | --- | --- |
@@ -63,6 +64,11 @@ protocol claims, and the [architecture diagram specification](docs/architecture-
   have not yet been proven.
 - **Deferred:** production PDS operation, OAuth and account recovery, live
   posting, moderation operations, token economics, and public launch.
+
+The repository gate is **implemented** as `npm run verify:foundation`; it checks
+the Swarm schemas/vectors, product-truth surfaces, local Markdown links,
+workstream traceability, package boundaries, credential hygiene, and tracked
+generated artifacts before running local tests, typechecking, and the web build.
 
 The older [dual-marketplace mockup](design/mockup/README.md) remains a useful
 vision and interaction reference. It is not the first product. The July
