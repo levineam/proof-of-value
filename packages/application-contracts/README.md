@@ -21,8 +21,8 @@ build against the same interface without either one inventing the boundary.
 
 ## Exposes now
 
-- A single-feed read view with separately authoritative content lifecycle,
-  admission, provenance, and optional labeled allocation facts.
+- A runnable single-feed read view with separately authoritative content
+  lifecycle, admission, provenance, and optional labeled allocation facts.
 - A runtime validator that refuses OAuth/token, DPoP key, PDS-admin, wallet-key,
   and raw-provider-error shaped fields in serializable application views.
 
@@ -31,9 +31,10 @@ proposed beyond this minimum safe view.
 
 ## Dependency direction
 
-Depends inward on `@pov/protocol` only. `apps/web` and `@pov/application`
-depend on this package, not the reverse; it must not redefine or duplicate
-either consumer's implementation details.
+Depends inward on `@pov/protocol` only. `apps/web` and the proposed
+`@pov/application` depend on this package, not the reverse. It does not depend
+on `@pov/at-adapter`, `@pov/app-index`, `@pov/at-client`, an account host, or
+Koinos code, and it must not duplicate any of their implementation details.
 
 ## Status
 

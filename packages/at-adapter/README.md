@@ -1,40 +1,44 @@
 # @pov/at-adapter
 
-Middleware that retrieves and normalizes real AT Protocol / Bluesky content
-for the feed while preserving exact version provenance.
+Read-side boundary for observing public AT Protocol / Bluesky content and
+normalizing record and account lifecycle evidence for the feed. It preserves
+exact version provenance; it is not a member-action or account-host client.
 
 ## Single responsibility
 
-> "Add an unauthenticated public-AppView adapter for a narrow selected-author
-> or explicit-URI feed. Parse bounded DID-based identifiers, query configured
-> provider origins only, enforce response and field limits, and normalize safe
-> plain-text and embed shapes. Distinguish current, changed, deleted,
-> malformed, stale, rate-limited, and unavailable observations."
-> — plan U3 approach, `docs/plans/2026-07-20-001-feat-parallel-prototype-foundation-plan.md`
+Observe public records and lifecycle facts only. The adapter may resolve a
+configured public AppView/PDS source, but it has no OAuth session, member
+authorization, publication, provisioning, PDS administration, or admission
+authority. `@pov/at-client` owns future member-authorized actions; a separate
+account host owns future provisioning and PDS operations; the feed-admission
+authority owns versioned admission and revocation decisions.
 
-Every record it returns carries an explicit state — `live / stale /
-unavailable / invalid` — and it **never** silently substitutes fixture content
-after a live read fails. Reply and OAuth write paths stay explicit but
-unimplemented in this stage.
+Every returned observation must carry explicit provenance and lifecycle state.
+It never silently substitutes fixture content after a live read fails. A
+DID-based AT URI locates the logical record; the observed CID binds the exact
+version. Deletion retains only minimal tombstone evidence and never rehydrates
+the post body or embeds.
 
 ## Built by
 
-**U3** (Real public AT read adapter), depending on U2's shared contracts.
+**U3** (public AT observation boundary), depending on U2's shared contracts.
 
 ## Will expose
 
-- A narrow public-AppView read path (selected-author or explicit-URI).
-- Normalized content references (author DID, DID-based AT URI, observed CID,
-  text, embed metadata) with source provenance.
-- Explicit non-`null` result states for deleted, malformed, rate-limited, and
-  unavailable records.
+- A narrow public read path (selected-author or explicit-URI).
+- Normalized DID, DID-based AT URI, observed CID, lifecycle, and source
+  provenance facts.
+- Explicit states for changed, deleted, inactive, migrated, malformed,
+  rate-limited, and unavailable observations.
 
 ## Dependency direction
 
-Depends inward on `@pov/protocol` only. It owns normalization and is consumed
-by `@pov/application` and the attestation bridge (U7 scripts); it does not
-depend on `@pov/app-index`, `@pov/application`, or any Koinos contract code.
+Depends inward on `@pov/protocol` only. It is consumed by the rebuildable
+`@pov/app-index` and read-side `@pov/application`; it does not depend on
+either, on `@pov/at-client`, on an account host, or on Koinos code.
 
 ## Status
 
-Status: scaffold — not yet implemented.
+Status: proposed — package scaffold only; no live public-read implementation
+exists. The U2 lifecycle and provenance contracts it must implement are
+already runnable.

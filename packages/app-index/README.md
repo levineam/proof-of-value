@@ -1,43 +1,40 @@
 # @pov/app-index
 
-The indexer that reconstructs pending state (locks, evaluations, allocations)
-from canonical Koinos events to serve the client and a SWARM-ranked feed.
+The rebuildable derived projection that joins AT observations, versioned
+admission/revocation facts, and later PoV/settlement evidence for the Swarm
+read view.
 
 ## Single responsibility
 
-> "A noncanonical read model that reconstructs pending state from canonical
-> Koinos events to serve the client and a SWARM-ranked feed. It is **not** the
-> financial record — the chain is."
-> — ARCHITECTURE.md, app-index component
-
-Implements ordered protobuf event decoding, idempotent projection, and joins
-against AT content observations through the attestation identifier. Applies
-the `@pov/protocol` proof-verification policy to classify evidence as current,
-pending, unverified, quarantined, stale-chain-epoch, missing, or invalid. It
-never calculates authoritative rewards, mints tokens, or rewrites chain
-history.
+It will project facts idempotently and deterministically: the same retained
+inputs produce the same feed projection, and a rebuild never needs a
+republish. It is not canonical content storage, admission authority, account
+host, member-action client, or financial record. When Koinos is eventually
+used, its canonical settlement events are an input to this projection—not an
+authority this package may rewrite or replace.
 
 ## Built by
 
-**U6** (Bridge, index, and application-service boundary), alongside
-`@pov/application`. (U2/U5 own the golden vectors this package's decoders must
-conform to.)
+**U6** (index and application-service boundary), alongside
+`@pov/application`.
 
 ## Will expose
 
-- Version-dispatched decoders for PoV contract events (accepted-attestation,
-  evaluation-recorded).
-- An idempotent projection store queryable by `@pov/application`.
-- Rehydration from a checked-in proof manifest plus canonical read-only chain
-  queries after restart.
+- Idempotent, version-dispatched projection of AT observations and admission
+  facts, queryable by `@pov/application`.
+- Rebuild from retained source facts, including deletion tombstones without
+  body hydration.
+- Later read-only ingestion of Koinos settlement evidence, separately labeled
+  from pending or simulated PoV data.
 
 ## Dependency direction
 
-Depends inward on `@pov/protocol`. Reads Koinos events and AT observations
-(via `@pov/at-adapter` output) but never imports contract implementation
-details from `contracts/koinos/`, and never holds signing keys — it is a pure
-read/reconstruction layer, not the reward path.
+Depends inward on `@pov/protocol`. It consumes public observations from
+`@pov/at-adapter`, admission/revocation facts from the feed-admission
+authority, and later read-only Koinos events. `@pov/application` consumes its
+output. It never imports Koinos contract implementation details or holds
+signing keys.
 
 ## Status
 
-Status: scaffold — not yet implemented.
+Status: proposed — package scaffold only; no index or persistence exists.

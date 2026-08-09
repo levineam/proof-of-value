@@ -2,56 +2,61 @@
 
 ## Status and product boundary
 
-This is the proposed architecture for **Swarm**, the first Proof of Value
+This is the current boundary map for **Swarm**, the first Proof of Value
 marketplace: one feed for people building, testing, documenting, and critiquing
-Proof of Value. It describes boundaries the repository is preparing to build;
-it is not a report of live infrastructure.
+Proof of Value. It describes both the runnable foundation and the boundaries
+the repository is preparing to build; it is not a report of live infrastructure.
 
-**Implemented:** a browser-local design mockup and a locally tested Koinos
-spike. **Simulated:** the mockup's feed, votes, and allocations.
-**Proposed:** the single-feed application and the authority split below.
-**Blocked:** a live Koinos testnet round trip is unproven. **Deferred:** account
-provisioning, OAuth, PDS operation, live posting, moderation operations, and
-live settlement.
+**Implemented:** U2's runnable Swarm feed contracts and fixtures, U4's
+fixture-backed single-feed shell, the future member-action contract in
+`@pov/at-client`, and a locally tested isolated Koinos spike. **Simulated:**
+the shell's votes and allocations. **Proposed:** public AT observation (U3),
+account provisioning, feed admission/revocation operations, the app index,
+the application service, and Koinos settlement. **Blocked:** a live Koinos
+testnet round trip is unproven. **Deferred:** a production PDS, OAuth and live
+posting, moderation operations, and live settlement.
 
 AT Protocol is canonical for account identity and ordinary public post records.
-Swarm owns feed admission, moderation policy, ranking, and PoV views. Koinos is
-the reference future settlement path; it is neither the product nor a proven
+Swarm owns feed admission, moderation policy, ranking, and PoV views. Koinos
+is a separate future settlement path; it is neither the product nor a proven
 live dependency.
 
 For the market-entry story, read [docs/product/SWARM_MVP.md](docs/product/SWARM_MVP.md).
 For SWARM mechanism details, read [WHITEPAPER.md](WHITEPAPER.md).
 
-## Proposed authority topology
+## Authority topology
 
 ```mermaid
 flowchart TB
   MEMBER[Swarm member] --> WEB[Swarm web shell]
-  WEB --> APP[Application service]
-  APP --> VIEW[Derived Swarm feed view]
+  WEB --> APP[Application read assembler]
   HOST[Proposed account host] --> AT[AT Protocol repository\nDID + app.bsky.feed.post]
-  MEMBER -. future member authorization .-> AT
-  AT --> OBS[AT observation adapter]
-  ADM[Feed-admission fact authority] --> IDX[Rebuildable app index]
+  MEMBER -. future member authorization .-> CLIENT[at-client]
+  CLIENT -. authorized future write .-> AT
+  AT --> OBS[at-adapter\npublic read + lifecycle observation]
+  ADM[Feed-admission authority\nversioned admission + revocation] --> IDX[app-index\nrebuildable derived projection]
   OBS --> IDX
-  IDX --> VIEW
-  POV[PoV evaluation / allocation authority] --> VIEW
-  KOINOS[Future Koinos settlement] -. canonical settlement only .-> VIEW
+  IDX --> APP
+  POV[PoV evaluation / allocation authority] --> IDX
+  KOINOS[Future Koinos settlement] -. canonical settlement evidence .-> IDX
 ```
 
 The dotted paths are proposed future operations. The browser must never hold a
 PDS administrative credential, provisioning authority, or a broad shared
-signing key. A member-authorized AT action is separate from any server-side
-account-provisioning authority. AT content, a Swarm admission decision, a
-derived index entry, and a settlement result retain separate provenance.
+signing key. A member-authorized AT action is separate from server-side
+provisioning; public observation is separate from both. AT content, a Swarm
+admission decision, a derived index entry, and a settlement result retain
+separate provenance.
 
 ## Components and maturity
 
 | Component | Responsibility | Current state |
 | --- | --- | --- |
-| `apps/web` | Future single-feed product shell and provenance display | **Implemented:** placeholder only; single-feed shell **proposed** |
-| `packages/at-client` | Future member-authorized AT actions | **Proposed**; not yet created |
-| `packages/at-adapter` | Public AT observations and lifecycle normalization | **Proposed** scaffold; no live reads |
+| `packages/protocol` + `packages/application-contracts` (U2) | Versioned Swarm facts and browser-safe feed-view contract | **Implemented:** runnable validators and vectors; broader read surface **proposed** |
+| `apps/web` (U4) | Fixture-backed single-feed shell and provenance display | **Implemented:** local shell; votes and allocations **simulated** |
+| `packages/at-client` | Future member-authorized AT actions and reconciliation contract | **Implemented:** dependency-free contract scaffold; network/OAuth **proposed** |
+| `packages/at-adapter` (U3) | Public read and lifecycle observation only | **Proposed:** package scaffold; no live public reads |
+| Proposed account host | Provisioning, custody, recovery, and PDS operations | **Proposed:** no host/PDS selected or operated |
 | Feed-admission authority | Versioned admission and revocation facts | **Proposed**; no authority exists |
 | `packages/app-index` | Rebuildable projection of observations and admission facts | **Proposed** scaffold; no index exists |
 | `packages/application` | Assemble the product read view | **Proposed** scaffold; no service exists |
@@ -66,11 +71,28 @@ author's AT repository. A DID-based AT URI identifies the logical record and an
 observed CID identifies the evaluated version. An edit must not silently change
 an evaluated object.
 
-Swarm does not make its application database the canonical copy of a post.
-Instead, it will record feed-admission facts separately, then rebuild a derived
-feed view from AT observations, admission facts, lifecycle observations, and
-the selected PoV authority. A public post may exist even when it is not admitted
-to Swarm; removing it from the feed cannot erase it from AT Protocol.
+Swarm does not make its application database the canonical copy of a post. The
+feed-admission authority records versioned admission or revocation facts, and
+`@pov/app-index` derives a rebuildable view from those facts, AT observations
+and lifecycle evidence, and the selected PoV authority. A public post may
+exist even when it is not admitted to Swarm; removing it from the feed cannot
+erase it from AT Protocol. Koinos, if later connected, remains separately
+canonical for settlement—not for content, identity, admission, or ranking.
+
+## Deterministic reconciliation rules
+
+These scenarios are acceptance rules for the proposed middle layers. They do
+not claim that the layers are already operational.
+
+| Scenario | Required result |
+| --- | --- |
+| Successful AT write, index failure | Reconcile the known URI/CID and rebuild or retry the projection; never republish the post. |
+| Admission replay | The same versioned admission/revocation fact and idempotency key produce one effective decision, not duplicate admission state. |
+| Projection rebuild | The same retained observations, lifecycle facts, and admission facts produce the same projection deterministically. |
+| Changed record | The new CID is a new evaluated version with its own admission and visibility state; it inherits neither the earlier admission nor evaluation. |
+| Deletion | Retain a minimal tombstone (DID, URI, last known/evaluated CID, lifecycle provenance); do not hydrate text, embeds, or body fields. |
+| Inactive, migration, old-PDS, or out-of-order observation | Apply authoritative ordering and current DID-to-PDS resolution. A stale source cannot overwrite newer state or resurrect deleted/inactive content. |
+| Index delay | Public/read-side observation remains available with its own provenance; delayed projection must not block direct content reads or imply failed publication. |
 
 ## Operational gate before real accounts
 
@@ -87,6 +109,7 @@ authorized transaction.
 The [dual-marketplace mockup](design/mockup/README.md) demonstrates the longer
 term idea of many marketplaces sharing one mechanism. The July
 [parallel-prototype plan](docs/plans/2026-07-20-001-feat-parallel-prototype-foundation-plan.md)
-records earlier protocol-first sequencing. Both remain available, but the
+and [long-term diagram specification](docs/architecture-diagram-spec.md)
+preserve the historical Koinos topology. Both remain available, but the
 [August market-entry plan](docs/plans/2026-08-04-001-feat-swarm-market-entry-foundation-plan.md)
 is the current implementation authority.

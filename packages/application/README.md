@@ -1,40 +1,39 @@
 # @pov/application
 
-The application service that assembles a single combined product view — feed,
-detail, wallet preview, and protocol-proof evidence — from the AT adapter and
-the app-index, for the web client to render.
+The read-side assembler that produces the Swarm product view from AT
+observations, admission facts, and the rebuildable app index for the web client
+to render.
 
 ## Single responsibility
 
-Implements the `@pov/application-contracts` read interfaces by joining
-normalized live-AT observations (`@pov/at-adapter`) with the noncanonical
-Koinos read model (`@pov/app-index`). It **reads**; it never holds signing
-keys, never submits attestations or evaluations, and never returns an indexed
-projection as canonical token balance. Per the plan's package topology, the
-web client consumes this application read contract rather than importing AT
-SDK types, Koinos client types, fixture stores, or contract implementation
-details directly.
+Will implement `@pov/application-contracts` by joining normalized AT
+observations (`@pov/at-adapter`) with the noncanonical Swarm projection
+(`@pov/app-index`). It **reads**: it has no member authorization, provisioning,
+admission/revocation authority, signing keys, or settlement authority. It
+never presents an index projection as canonical content or token balance. The
+web client depends on this read boundary rather than AT/Koinos SDK types or
+write-path details.
 
 ## Built by
 
-**U6** (Bridge, index, and application-service boundary), alongside
+**U6** (index and application-service boundary), alongside
 `@pov/app-index`.
 
 ## Will expose
 
-- Feed, detail, wallet-preview, and proof-evidence queries conforming to
-  `@pov/application-contracts`.
-- Source- and verification-status metadata (live / stale / unavailable /
-  invalid; current / pending / unverified / quarantined / stale-chain-epoch /
-  missing / invalid) on every returned field group.
+- A Swarm feed and detail read view conforming to `@pov/application-contracts`.
+- Separately labeled content lifecycle, admission, provenance, and PoV/
+  settlement facts, including an index-delay/pending state that does not block
+  direct public reads.
 
 ## Dependency direction
 
 Depends inward on `@pov/protocol` and `@pov/application-contracts`, and reads
-from `@pov/at-adapter` and `@pov/app-index`. `apps/web` depends on this
-package. This package never imports AT or Koinos write/signing paths — it is
-strictly a read-side assembler.
+from `@pov/at-adapter` and `@pov/app-index`. `apps/web` may depend on this
+package. It never imports AT write/signing paths or Koinos settlement code.
 
 ## Status
 
-Status: scaffold — not yet implemented.
+Status: proposed — package scaffold only. The U2 read contract and U4
+fixture-backed shell demonstrate the intended consumer boundary, not a running
+application service.
