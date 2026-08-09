@@ -8,52 +8,42 @@ find a concrete place to help.
 
 This document explains how the work is organized and where to start.
 
-## The parallel-workstream model
+## Active contributor path
 
-The plan behind this repository (`docs/plans/2026-07-20-001-feat-parallel-prototype-foundation-plan.md`)
-deliberately sequences two narrow gates before opening parallel tracks:
+Start with [the bounded Swarm workstreams](docs/workstreams/README.md). They
+are the active August 2026 contributor entry point and map each track to the
+current plan's R/F/AE/KTD contracts, maturity, objective proof, dependencies,
+and unresolved decisions. Choose a packet before proposing a code change.
 
-1. **Feasibility gate (U1).** Prove the Koinos toolchain can compile, deploy,
-   and retrieve an event from Harbinger before anything else depends on it.
-   The local build and event test pass, but the live test-network round trip is
-   still blocked — see `docs/development/toolchain-evidence.md`.
-2. **Shared contracts gate (U2).** Freeze the protobuf/JSON protocol seam and
-   the application read contract so the tracks below don't have to invent
-   their own shared boundary. This is designed, not yet built —
-   see `spec/protocol/` and `packages/protocol/`.
+The repository foundation is fixture-first: fixtures, simulations, proposals,
+blocked network proof, and deferred operations must be labeled at their
+boundary. No packet authorizes live account provisioning, OAuth, PDS operation,
+public post publishing, moderation operation, Koinos settlement, a token
+launch, investment product, or public beta.
 
-Once both gates land, four tracks advance **in parallel**, all depending
-inward on the same shared contracts:
-
-| Track | Lives in | Owns |
-|---|---|---|
-| Web experience | `apps/web/` | rendering + provenance labels |
-| AT integration | `packages/at-adapter/` | normalization of live AT reads |
-| Bridge & index | `packages/app-index/`, `packages/application/` | event decoding, product-view assembly |
-| Koinos foundations | `contracts/koinos/pov/`, `contracts/koinos/token/`, `contracts/koinos/identity/` | attestation/evaluation acceptance, event conformance |
-
-They converge in **U7**, a reproducible AT-to-Harbinger cross-protocol proof
-(`tests/protocol-proof/`, `scripts/protocol-proof/`), then ship as a
-**U9 read-only hosted preview** with no signer or operator route.
-
-See `ROADMAP.md` for the full unit sequence and current status of each.
-
-## Two decisions worth knowing before you start
-
-- **Collaboration-ready foundation before user beta.** This preview does not
-  need every product flow to operate end to end; it needs to demonstrate the
-  vision, the engineering boundaries, and real protocol feasibility well
-  enough to recruit collaborators.
-- **Protocol-grounded evidence over simulation.** Test fixtures prove
-  deterministic behavior, but product credibility here comes from code that
-  actually reads or writes AT Protocol and Koinos — not from a fixture-backed
-  demo dressed up as a working product. Anything not yet protocol-grounded is
-  labeled design-only or deferred, never presented as live.
+The [July parallel-workstream map](docs/plans/2026-07-20-001-feat-parallel-prototype-foundation-plan.md)
+remains protocol-history evidence, including its local Koinos spike and
+cross-protocol proof ambition. It is not active product sequencing.
 
 ## Running what exists today
 
-Two things in this repository are built and tested; everything else is a
-scaffold or design surface, not yet built.
+The repository now contains a runnable contract foundation and fixture-backed
+single-feed shell. Live AT account operations, public reads, admission/index
+services, and settlement remain proposed or blocked; read each workstream's
+maturity label before treating a boundary as operational.
+
+**Swarm contracts and vectors** (implemented, credential-free):
+```sh
+npm test --workspace=@pov/protocol
+npm test --workspace=@pov/application-contracts
+npm test --workspace=@pov/at-client
+```
+
+**The Swarm web shell** (implemented fixture, no live writes):
+```sh
+npm run build --workspace=@pov/web
+npm test --workspace=@pov/web
+```
 
 **The Koinos feasibility spike** (built, passing test):
 ```sh
@@ -65,15 +55,16 @@ COREPACK_ENABLE_PROJECT_SPEC=0 yarn test
 See `contracts/koinos/README.md` for the optional credentialed Harbinger
 probe.
 
-**The mockup** (built, browser-local state — visual direction only, not
-protocol authority):
+**The mockup** (implemented browser-local state — historical visual direction,
+not protocol authority):
 ```sh
-cd mockup
+cd design/mockup
 npm install
 npm run dev
 ```
 
-Every other directory (`packages/*`, `contracts/koinos/pov`,
+The remaining package directories (`packages/at-adapter`,
+`packages/app-index`, `packages/application`, `contracts/koinos/pov`,
 `contracts/koinos/token`, `contracts/koinos/identity`, `spec/`, `tests/`,
 `scripts/`) contains a README describing what will live there and which unit
 builds it — read those before proposing an implementation so your work lands
@@ -81,9 +72,10 @@ on the intended seam.
 
 ## Before your first change
 
-Please open an issue or discussion describing which track and unit you're
-picking up before writing code — the shared contracts (U2) are the one piece
-everything else depends on, so changes there need coordination. Outbound
-license and inbound contribution terms will be declared before any external
-contribution is accepted (plan R23); until then, treat this as an invite to
-discuss and prototype, not to open unsolicited pull requests.
+Please open an issue or discussion naming the workstream packet and bounded
+slice before writing code. Shared contracts and policy boundaries require the
+coordination points named in that packet. The outbound license is MIT; inbound
+contribution terms remain unsettled, so this is an invitation to discuss and
+prototype—not to submit unsolicited pull requests. See [ROADMAP.md](ROADMAP.md)
+for maturity and [the active plan](docs/plans/2026-08-04-001-feat-swarm-market-entry-foundation-plan.md)
+for the governing contracts.

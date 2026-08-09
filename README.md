@@ -43,19 +43,22 @@ also recorded in [ROADMAP.md](ROADMAP.md).
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Proposed authority and component map for the single-feed product |
 | [ROADMAP.md](ROADMAP.md) | Honest component maturity and the active implementation sequence |
 | [WHITEPAPER.md](WHITEPAPER.md) | Mechanism reference: SWARM, its argument, threat model, and unresolved questions |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Existing contributor guidance; workstreams are being reconciled to the active plan |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Contributor guidance and review expectations |
+| [docs/workstreams/README.md](docs/workstreams/README.md) | Active bounded tracks for AT accounts/publishing, lifecycle/indexing, PoV settlement, operations, and research |
 
 Supporting material: the [primary-source audit](docs/source-audit.md) for
 protocol claims, and the [architecture diagram specification](docs/architecture-diagram-spec.md).
 
 ## What exists today
 
-- **Implemented:** a standalone, browser-local dual-marketplace design mockup
-  and a Koinos spike contract that builds and passes a local event test.
-- **Simulated:** the mockup's feed state, voting, and allocation calculation;
-  they are not AT, Koinos, or Swarm protocol state.
-- **Proposed:** the single Swarm feed, AT-backed account path, feed admission,
-  PoV evaluation, and settlement architecture.
+- **Implemented:** U2 Swarm contracts and vectors, a credential-free U3
+  authorized-action boundary, a fixture-backed single-feed shell, the
+  standalone historical mockup, and a Koinos spike contract that builds and
+  passes a local event test.
+- **Simulated:** the shell and mockup's feed state, voting, and allocation
+  calculations; they are not AT, Koinos, or live Swarm protocol state.
+- **Proposed:** public AT observation, account hosting/provisioning, feed
+  admission and indexing, PoV evaluation policy, and settlement architecture.
 - **Blocked:** live Koinos testnet deployment, invocation, and event retrieval
   have not yet been proven.
 - **Deferred:** production PDS operation, OAuth and account recovery, live
@@ -66,6 +69,10 @@ vision and interaction reference. It is not the first product. The July
 [parallel-prototype plan](docs/plans/2026-07-20-001-feat-parallel-prototype-foundation-plan.md)
 remains protocol-history evidence; the August market-entry plan supersedes it
 for current sequencing.
+
+To help, choose a packet in the [active workstream guide](docs/workstreams/README.md).
+Each packet names its current maturity, owned boundary, dependencies, objective
+verification, and the product decisions it may not settle.
 
 ## Questions worth helping with
 
