@@ -473,10 +473,10 @@ These gates do not block the collaborator-ready foundation. They block provision
   - Reused or mismatched state, wrong issuer, returned-DID mismatch, missing or invalid DPoP nonce, undeclared granted scope, and actor-DID mismatch fail authorization without exposing provider data.
   - Session denial, expiry, revocation, and unavailable PDS return explicit states without publishing or logging credentials.
   - Publication returns success only with both URI and CID; a partial response fails closed.
-  - A lost response after a committed write returns outcome-unknown and blocks blind resubmission until correlation-based reconciliation completes.
+  - A lost response after a committed write returns outcome-unknown and blocks blind resubmission until reconciliation looks up the expected URI derived from the preallocated record key and completes.
   - A test fake can reproduce publish-success/admission-pending without coupling the package to the app index.
   - Provisioning denied before identity creation and identity-created/session-unavailable remain distinct outcomes.
-  - Provisioning requested, identity created, user recovery established, and hosting proof incomplete remain distinct states; no fake adapter models operator password access or a shared user-write credential.
+  - Provisioning requested, identity created, user recovery established, and hosting proof incomplete remain distinct states; the live gate proves the host cannot retain an impersonating password or shared user-write credential after member handoff, and no fake adapter models either.
   - Package exports do not expose an administrative account-creation secret or browser-serializable refresh token.
 - **Verification:** `npm test --workspace=@pov/at-client`, `npm run typecheck`, and `npm run lint` pass; contract tests cover OAuth transaction failures; static configuration rejects an app/OAuth origin and PDS origin on the same registrable domain; repository scanning finds no fixture credential.
 - **Dependencies:** U2.
@@ -485,7 +485,7 @@ These gates do not block the collaborator-ready foundation. They block provision
 
 - **Goal:** Replace the developer-placeholder page with the repository's primary product artifact: one fixture-backed feed for building Proof of Value.
 - **Requirements:** R1-R6, R8, R10, R14-R16, R18-R19; F2-F3, F5; AE2-AE3, AE6; KTD5, KTD7-KTD10.
-- **Files:** `apps/web/app/page.js`, `apps/web/app/layout.js`, `apps/web/app/globals.css`, `apps/web/components/`, `apps/web/lib/`, `apps/web/fixtures/`, `apps/web/test/feed-foundation.test.js`, `apps/web/package.json`, `design/mockup/app/`, `design/mockup/components/`, `design/mockup/lib/`.
+- **Files:** `apps/web/app/page.js`, `apps/web/app/layout.js`, `apps/web/app/globals.css`, `apps/web/components/`, `apps/web/lib/`, `apps/web/fixtures/`, `apps/web/test/feed-foundation.test.js`, `apps/web/package.json`. The historical `design/mockup` remains a read-only visual reference labeled by U1.
 - **Approach:** Reuse suitable visual language from the mockup but build the active shell in `apps/web`. Render a single project-purpose header, ordinary composer, feed cards, account entry point, vote controls, allocation context, and source-state detail from U2 application fixtures. Seed posts that model useful first-feed contributions: proposal, critique, implementation note, experiment, and request for evidence. Keep unimplemented interactions inert or explicitly preview-only. Remove the marketplace switcher from the active experience; do not delete it from the historical mockup.
 - **Patterns:** Use the existing `design/mockup/components/PostCard.js`, `VoteBar.js`, and styling as visual references. Consume application fixtures through a small web data boundary rather than importing protocol schema internals into components.
 - **Test Scenarios:**

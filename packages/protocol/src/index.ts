@@ -73,9 +73,21 @@ export function validateLifecycleObservation(value: unknown): Validation<Lifecyc
   return finish<LifecycleObservation>(value, issues);
 }
 
-/** Higher sequence wins; terminal delete/inactive observations cannot be resurrected by stale reads. */
-export function selectAuthoritativeObservation(current: LifecycleObservation | undefined, candidate: LifecycleObservation): LifecycleObservation {
+/**
+ * Select one observation only after the caller supplies the DID-to-PDS
+ * resolution that was authoritative for this read. A resolution change can
+ * replace an observation from the old PDS; an observation from any other DID
+ * or PDS is never allowed into the identity-scoped projection.
+ */
+export function selectAuthoritativeObservation(current: LifecycleObservation | undefined, candidate: LifecycleObservation, resolution: AccountResolution): LifecycleObservation | undefined {
+  if (!validateAccountResolution(resolution).ok) return current;
+  if (current && current.did !== candidate.did) return current;
+  if (candidate.did !== resolution.did || candidate.pds !== resolution.pds) {
+    return current?.did === resolution.did && current.pds !== resolution.pds ? undefined : current;
+  }
   if (!current) return candidate;
+  if (current.did !== resolution.did) return current;
+  if (current.pds !== resolution.pds) return candidate;
   if (candidate.ordering.sequence < current.ordering.sequence) return current;
   if (candidate.ordering.sequence === current.ordering.sequence && candidate.observedAt <= current.observedAt) return current;
   if (["deleted", "inactive"].includes(current.state) && candidate.ordering.sequence <= current.ordering.sequence) return current;

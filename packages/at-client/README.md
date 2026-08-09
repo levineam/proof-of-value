@@ -7,11 +7,11 @@ Dependency-free, framework-neutral **server-side port** for future member-author
 - `@pov/at-adapter` observes public records; this package represents authorized member actions.
 - A separate account-host operator represents provisioning outcomes. This package never carries provisioning authority.
 - The only modeled permission is `create` for `app.bsky.feed.post`.
-- `recordKey` and `idempotencyKey` are required for publication and reconciliation.
+- `recordKey` and `idempotencyKey` are required for publication and reconciliation. The record key is allocated before `createRecord`, so reconciliation can derive the expected DID-based URI and look it up before any retry.
 
 ## Explicit non-goals
 
-No OAuth callbacks, network SDK, token/credential persistence, browser session serialization, PDS administration, account provisioning secret, or live post publishing exists here. A success requires both an AT URI and CID. An unknown write outcome blocks blind retry until reconciliation returns `record-found`, `pending`, or `not-found`.
+No OAuth callbacks, network SDK, token/credential persistence, browser session serialization, PDS administration, account provisioning secret, or live post publishing exists here. A success requires both an AT URI and CID owned by the requested DID. An unknown write outcome blocks blind retry until reconciliation looks up the preallocated record identity and returns `record-found`, `pending`, or `not-found`.
 
 ## Safe outcomes
 

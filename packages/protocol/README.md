@@ -24,7 +24,9 @@ Koinos protobuf/codec path.
 
 - Dependency-free TypeScript types and runtime validators for ordinary-post
   publication outcomes, URI-plus-CID admission facts, lifecycle observations,
-  tombstones, provenance, and observation precedence.
+  tombstones, provenance, and observation precedence. The selector requires a
+  validated DID-to-PDS resolution and refuses observations from another DID or
+  stale PDS before comparing ordering evidence.
 - Golden JSON vectors under `spec/vectors/swarm-feed/`; positive and negative
   vectors run through the same exported validators.
 

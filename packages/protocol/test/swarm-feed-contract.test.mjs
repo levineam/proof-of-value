@@ -13,5 +13,16 @@ for (const name of await readdir(vectorRoot)) {
 test("newer authoritative observation wins, while stale old-PDS reads cannot resurrect deletion", () => {
   const deleted = { did: "did:plc:swarm", pds: "https://new-pds.example", state: "deleted", observedAt: "2026-08-09T12:10:00Z", ordering: { sequence: 6 }, tombstone: { uri: "at://did:plc:swarm/app.bsky.feed.post/3kz", lastKnownCid: "bafyOld", observedAt: "2026-08-09T12:10:00Z" } };
   const stale = { did: "did:plc:swarm", pds: "https://old-pds.example", state: "current", observedAt: "2026-08-09T12:09:00Z", ordering: { sequence: 5 }, uri: "at://did:plc:swarm/app.bsky.feed.post/3kz", currentCid: "bafyOld" };
-  assert.equal(selectAuthoritativeObservation(deleted, stale).state, "deleted");
+  const resolution = { did: "did:plc:swarm", pds: "https://new-pds.example", observedAt: "2026-08-09T12:10:00Z", provenance: { source: "at-protocol", state: "fixture", observedAt: "2026-08-09T12:10:00Z" } };
+  assert.equal(selectAuthoritativeObservation(deleted, stale, resolution)?.state, "deleted");
+});
+
+test("observation selection is identity- and resolution-scoped", () => {
+  const current = { did: "did:plc:swarm", pds: "https://new-pds.example", state: "current", observedAt: "2026-08-09T12:10:00Z", ordering: { sequence: 6 }, uri: "at://did:plc:swarm/app.bsky.feed.post/3kz", currentCid: "bafyCurrent" };
+  const resolution = { did: "did:plc:swarm", pds: "https://new-pds.example", observedAt: "2026-08-09T12:10:00Z", provenance: { source: "at-protocol", state: "fixture", observedAt: "2026-08-09T12:10:00Z" } };
+  const differentDid = { ...current, did: "did:plc:other", uri: "at://did:plc:other/app.bsky.feed.post/3kz", ordering: { sequence: 99 } };
+  const stalePds = { ...current, pds: "https://old-pds.example", ordering: { sequence: 99 } };
+  assert.equal(selectAuthoritativeObservation(current, differentDid, resolution)?.did, current.did);
+  assert.equal(selectAuthoritativeObservation(current, stalePds, resolution)?.did, current.did);
+  assert.equal(selectAuthoritativeObservation(stalePds, stalePds, resolution), undefined);
 });

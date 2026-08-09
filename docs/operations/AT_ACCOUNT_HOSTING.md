@@ -21,6 +21,7 @@ The application/OAuth-client origin and PDS origin must use separate registrable
 
 - **Invites:** named issuer, eligibility, expiry, revocation, per-invite quota, and a no-account-created denial path.
 - **Recovery handoff:** distinguish identity-created/session-unavailable from recovery established; document who can initiate recovery, who confirms it, and the user-visible receipt.
+- **Member-control handoff:** after provisioning, prove that the host cannot retain a password, shared write credential, or impersonating OAuth capability; rotate or revoke bootstrap material and record the member-authorized handoff receipt before enabling ordinary posting.
 - **Migration and exit:** user-initiated PDS migration with DID confirmation, stale-session revocation, index reconciliation, export/exit instructions, and no loss of DID-keyed history.
 - **Audit and backup:** append-only audit evidence for provisioning, session lifecycle, break-glass, moderation, and deletion; encrypted backup inventory; restore and PLC-key drills with dates and owners.
 - **Moderation and abuse:** named feed-level moderation and appeal roles; PDS authority is not feed-admission authority. Include reports, spam throttles, invite and post rate limits, anti-automation controls, metrics, alerts, and an abuse-response tabletop exercise. Feed exclusion cannot delete a public AT record.

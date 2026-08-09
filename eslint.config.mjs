@@ -5,7 +5,7 @@ import tseslint from "typescript-eslint";
 export default tseslint.config(
   // design/mockup is a standalone Next.js design reference with its own package.json
   // (U4 re-homes it into apps/web, where it is linted). Scoped out like the spike contract.
-  { ignores: [".worktrees/**", "**/.next/**", "**/node_modules/**", "contracts/koinos/spike/**", "design/mockup/**"] },
+  { ignores: [".worktrees/**", "**/.next/**", "**/dist/**", "**/node_modules/**", "contracts/koinos/spike/**", "design/mockup/**"] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {

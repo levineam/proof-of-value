@@ -77,7 +77,7 @@ export interface AuthorizedAtPort {
 }
 
 const did = (value: string): boolean => /^did:[a-z0-9]+:[A-Za-z0-9._:%-]+$/.test(value);
-const uri = (value: string): boolean => /^at:\/\/did:[^/]+\/app\.bsky\.feed\.post\/[A-Za-z0-9._-]+$/.test(value);
+const atUriDid = (value: string): string | undefined => /^at:\/\/(did:[^/]+)\/app\.bsky\.feed\.post\/[A-Za-z0-9._-]+$/.exec(value)?.[1];
 const nonEmpty = (value: string): boolean => value.trim().length > 0;
 const sameActions = (actions: readonly string[]): boolean => actions.length === 1 && actions[0] === "create";
 
@@ -95,12 +95,18 @@ export function validatePublishRequest(request: PublishRequest): PublishFailureD
   return undefined;
 }
 
-/** A success is valid only when AT returns both a DID-based URI and a CID. */
-export function publicationFromResponse(input: Pick<PublishRequest, "recordKey" | "idempotencyKey">, response: { uri?: string; cid?: string }): PublicationOutcome {
-  if (!uri(response.uri ?? "") || !nonEmpty(response.cid ?? "")) {
-    return { state: "failed", ...input, diagnostic: "response-partial" };
+/** A success is valid only when AT returns both a DID-owned URI and a CID. */
+export function publicationFromResponse(input: Pick<PublishRequest, "actorDid" | "recordKey" | "idempotencyKey">, response: { uri?: string; cid?: string }): PublicationOutcome {
+  const { actorDid, recordKey, idempotencyKey } = input;
+  const correlation = { recordKey, idempotencyKey };
+  const returnedDid = atUriDid(response.uri ?? "");
+  if (returnedDid !== undefined && returnedDid !== actorDid) {
+    return { state: "failed", ...correlation, diagnostic: "returned-did-mismatch" };
   }
-  return { state: "succeeded", ...input, uri: response.uri!, cid: response.cid! };
+  if (returnedDid === undefined || !nonEmpty(response.cid ?? "")) {
+    return { state: "failed", ...correlation, diagnostic: "response-partial" };
+  }
+  return { state: "succeeded", ...correlation, uri: response.uri!, cid: response.cid! };
 }
 
 /** Reject same registrable domains; real deployment must also use a Public Suffix List check. */
@@ -129,7 +135,10 @@ export interface FakeAtClientOptions {
 export function createFakeAtClient(options: FakeAtClientOptions = {}): AuthorizedAtPort {
   const authorization = options.authorization ?? { state: "authorized", session: { actorDid: "did:plc:member", capabilityRef: "fake-capability-reference", expiresAt: "2099-01-01T00:00:00.000Z", collection: POST_COLLECTION, actions: POST_ACTIONS } };
   return {
-    async authorize(request) { return validatePostAuthorizationRequest(request) ? { state: "denied", diagnostic: validatePostAuthorizationRequest(request)! } : authorization; },
+    async authorize(request) {
+      const diagnostic = validatePostAuthorizationRequest(request);
+      return diagnostic ? { state: "denied", diagnostic } : authorization;
+    },
     async publish(request) {
       const invalid = validatePublishRequest(request); if (invalid) return { state: "failed", recordKey: request.recordKey, idempotencyKey: request.idempotencyKey, diagnostic: invalid };
       if (options.publish === "unknown") return { state: "unknown", recordKey: request.recordKey, idempotencyKey: request.idempotencyKey, diagnostic: "publication-unknown", retryBlocked: true };
@@ -139,9 +148,11 @@ export function createFakeAtClient(options: FakeAtClientOptions = {}): Authorize
       return publicationFromResponse(request, { uri: `at://${request.actorDid}/${POST_COLLECTION}/${request.recordKey}`, cid: "bafyfakecid" });
     },
     async reconcile(input) {
-      if (options.reconciliation === "pending") return { state: "pending", ...input, retryBlocked: true, diagnostic: "reconciliation-pending" };
-      if (options.reconciliation === "not-found") return { state: "not-found", ...input, retryBlocked: false, diagnostic: "reconciliation-not-found" };
-      return { state: "record-found", ...input, uri: `at://${input.actorDid}/${POST_COLLECTION}/${input.recordKey}`, cid: "bafyfakecid" };
+      const { actorDid, recordKey, idempotencyKey } = input;
+      const correlation = { recordKey, idempotencyKey };
+      if (options.reconciliation === "pending") return { state: "pending", ...correlation, retryBlocked: true, diagnostic: "reconciliation-pending" };
+      if (options.reconciliation === "not-found") return { state: "not-found", ...correlation, retryBlocked: false, diagnostic: "reconciliation-not-found" };
+      return { state: "record-found", ...correlation, uri: `at://${actorDid}/${POST_COLLECTION}/${recordKey}`, cid: "bafyfakecid" };
     }
   };
 }

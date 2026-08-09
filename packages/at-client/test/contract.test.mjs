@@ -29,6 +29,21 @@ test("publication succeeds only with URI and CID", async () => {
   if (result.state === "succeeded") assert.match(result.uri, /^at:\/\/did:/);
   assert.equal(publicationFromResponse(request, { cid: "cid-only" }).state, "failed");
   assert.equal(publicationFromResponse(request, { uri: "at://did:plc:member/app.bsky.feed.post/record-1" }).state, "failed");
+  assert.deepEqual(publicationFromResponse(request, { uri: "at://did:plc:other/app.bsky.feed.post/record-1", cid: "bafywrongowner" }), {
+    state: "failed", recordKey: request.recordKey, idempotencyKey: request.idempotencyKey, diagnostic: "returned-did-mismatch"
+  });
+});
+
+test("publication and reconciliation outcomes never serialize member capability or draft content", async () => {
+  const publication = await createFakeAtClient().publish(request);
+  const reconciliation = await createFakeAtClient({ reconciliation: "found" }).reconcile(request);
+  for (const outcome of [publication, reconciliation]) {
+    assert.equal("session" in outcome, false);
+    assert.equal("actorDid" in outcome, false);
+    assert.equal("text" in outcome, false);
+    assert.equal("capabilityRef" in outcome, false);
+    assert.doesNotMatch(JSON.stringify(outcome), /opaque-reference|A public post\./);
+  }
 });
 
 test("unknown publication blocks retry until deterministic reconciliation", async () => {
