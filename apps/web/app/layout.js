@@ -1,6 +1,8 @@
+import "./globals.css";
+
 export const metadata = {
-  title: "Proof of Value",
-  description: "Collaboration-ready protocol prototype",
+  title: "Swarm — Proof of Value",
+  description: "A fixture-backed Proof of Value Swarm feed prototype.",
 };
 
 export default function RootLayout({ children }) {
