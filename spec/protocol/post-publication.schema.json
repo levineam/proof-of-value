@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://proof-of-value.org/schema/post-publication/v1",
+  "title": "Correlated ordinary-post publication outcome",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["recordKey", "idempotencyKey", "state", "observedAt"],
+  "properties": {
+    "recordKey": { "type": "string", "minLength": 16, "maxLength": 128, "pattern": "^[A-Za-z0-9_-]+$" },
+    "idempotencyKey": { "type": "string", "minLength": 16, "maxLength": 128, "pattern": "^[A-Za-z0-9_-]+$" },
+    "state": { "enum": ["succeeded", "unknown", "partial", "failed"] },
+    "uri": { "type": "string", "pattern": "^at://did:[a-z0-9]+:[A-Za-z0-9._:%-]+/app\\.bsky\\.feed\\.post/[A-Za-z0-9._-]+$" },
+    "cid": { "type": "string", "pattern": "^[A-Za-z0-9]+$" },
+    "reasonCategory": { "enum": ["denied", "callback-mismatch", "scope-escalation", "rate-limited", "unavailable", "invalid-request"] },
+    "recovery": { "const": "reconcile-required" },
+    "observedAt": { "type": "string", "format": "date-time" }
+  },
+  "swarmPublicationBinding": true,
+  "allOf": [
+    { "if": { "properties": { "state": { "const": "succeeded" } } }, "then": { "required": ["uri", "cid"] } },
+    { "if": { "properties": { "state": { "enum": ["unknown", "partial", "failed"] } } }, "then": { "not": { "anyOf": [{ "required": ["uri"] }, { "required": ["cid"] }] } } },
+    { "if": { "properties": { "state": { "enum": ["unknown", "partial"] } } }, "then": { "required": ["reasonCategory", "recovery"] } },
+    { "if": { "properties": { "state": { "enum": ["succeeded", "failed"] } } }, "then": { "not": { "required": ["recovery"] } } }
+  ]
+}

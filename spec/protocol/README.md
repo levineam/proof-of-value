@@ -19,7 +19,7 @@ is the TypeScript package that consumes and re-exports validated types and
 codecs generated or derived from these schemas. `spec/vectors/` holds the
 golden vectors that check both sides agree.
 
-## Contents (planned)
+## Contents
 
 - `koinos/pov.proto` — fact-attestation and evaluation commands/events.
 - `content-reference.schema.json`, `attestation.schema.json`,
@@ -27,6 +27,9 @@ golden vectors that check both sides agree.
   off-chain views.
 - `proof-manifest.schema.json` — the proof-manifest schema (present as an
   initial scaffold stub in this directory; see that file).
+- `swarm-account.schema.json`, `post-publication.schema.json`,
+  `feed-entry.schema.json`, and `content-lifecycle.schema.json` — implemented
+  JSON Schemas for the narrow Swarm feed foundation.
 
 ## Built by
 
@@ -34,6 +37,9 @@ golden vectors that check both sides agree.
 
 ## Status
 
-Status: scaffold — not yet implemented. The `proof-manifest.schema.json`
-stub in this directory is a minimal, valid placeholder schema, not the final
-U2 specification.
+Status: partially implemented — the Swarm feed schemas are compiled and run
+against golden vectors alongside equivalent dependency-free runtime contracts.
+Schemas that use `swarm*` cross-field keywords require the published
+`@pov/schema-validator` vocabulary before compilation; this is the supported
+AJV validation path, rather than an optional verifier-local extension. The
+proof-manifest and Koinos schema seams remain scaffold/proposed.

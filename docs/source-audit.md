@@ -1,7 +1,14 @@
 # Proof of Value source audit
 
-**Audit date:** 2026-07-18  
+**Audit date:** 2026-08-09
 **Scope:** factual support for the first white paper; this is not a mechanism specification. Sources below are primary protocol documentation, maintained protocol code, or the original Vandeberg posts. A claim marked **proposal** must never be worded as an existing capability of AT Protocol, Koinos, Steem, or Hive.
+
+For the current Swarm foundation, an ordinary `app.bsky.feed.post` and its AT
+identity are the canonical content facts. Swarm owns admission, ranking,
+moderation, PoV evaluation, and allocation as application facts; Koinos remains
+a deferred reference settlement path. Koinos Nicknames may be evaluated later
+as a display alias beside a verified settlement address, never as an AT link,
+Swarm identity, record key, or authorization mechanism.
 
 ## Writer rules
 

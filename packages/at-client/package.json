@@ -1,0 +1,15 @@
+{
+  "name": "@pov/at-client",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Server-side port for future authorized AT member actions using the shared publication contract.",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "dependencies": {
+    "@pov/protocol": "0.0.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build --workspace=@pov/protocol && npm run build && node --test test/*.test.mjs"
+  }
+}

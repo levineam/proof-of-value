@@ -7,7 +7,9 @@
     "skipLibCheck": true,
     "noEmit": true,
     "allowJs": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": { "@pov/protocol": ["packages/protocol/src/index.ts"] }
   },
-  "include": ["apps/web/**/*.js"]
+  "include": ["apps/web/**/*.js", "packages/*/src/**/*.ts"]
 }

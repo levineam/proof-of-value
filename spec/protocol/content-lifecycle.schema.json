@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://proof-of-value.org/schema/content-lifecycle/v1",
+  "title": "Observed AT record lifecycle fact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["did", "pds", "state", "observedAt", "ordering"],
+  "properties": {
+    "did": { "type": "string", "pattern": "^did:[a-z0-9]+:[A-Za-z0-9._:%-]+$" },
+    "pds": { "type": "string", "pattern": "^https://" },
+    "state": { "enum": ["current", "deleted", "inactive", "unavailable", "migrated"] },
+    "uri": { "type": "string", "pattern": "^at://did:[a-z0-9]+:[A-Za-z0-9._:%-]+/app\\.bsky\\.feed\\.post/[A-Za-z0-9._-]+$" },
+    "currentCid": { "type": "string", "minLength": 1 },
+    "repositoryRevision": { "type": "string", "minLength": 1 },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "ordering": { "type": "object", "additionalProperties": false, "required": ["sequence"], "properties": { "sequence": { "type": "integer", "minimum": 0 }, "commit": { "type": "string", "minLength": 1 } } },
+    "tombstone": { "type": "object", "additionalProperties": false, "required": ["uri", "lastKnownCid", "observedAt"], "properties": { "uri": { "type": "string", "pattern": "^at://did:[a-z0-9]+:[A-Za-z0-9._:%-]+/app\\.bsky\\.feed\\.post/[A-Za-z0-9._-]+$" }, "lastKnownCid": { "type": "string", "minLength": 1 }, "observedAt": { "type": "string", "format": "date-time" } } }
+  },
+  "swarmLifecycleIdentity": true,
+  "allOf": [
+    { "if": { "properties": { "state": { "const": "current" } } }, "then": { "required": ["uri", "currentCid"] } },
+    { "if": { "properties": { "state": { "const": "deleted" } } }, "then": { "required": ["tombstone"] } }
+  ]
+}

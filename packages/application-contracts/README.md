@@ -19,21 +19,24 @@ build against the same interface without either one inventing the boundary.
 
 **U2** (Versioned protocol and application contracts).
 
-## Will expose
+## Exposes now
 
-- View types for the ranked feed, post detail, wallet preview, and protocol
-  proof evidence.
-- The full evidence-state vocabulary: current, pending, unverified,
-  quarantined, stale-chain-epoch, missing, and invalid.
-- Conforming fixtures that `apps/web` (U4) can consume before `@pov/application`
-  (U6) exists.
+- A runnable single-feed read view with separately authoritative content
+  lifecycle, admission, provenance, and optional labeled allocation facts.
+- A runtime validator that refuses OAuth/token, DPoP key, PDS-admin, wallet-key,
+  and raw-provider-error shaped fields in serializable application views.
+
+Ranked feed, detail, wallet preview, and proof-evidence interfaces remain
+proposed beyond this minimum safe view.
 
 ## Dependency direction
 
-Depends inward on `@pov/protocol` only. `apps/web` and `@pov/application`
-depend on this package, not the reverse; it must not redefine or duplicate
-either consumer's implementation details.
+Depends inward on `@pov/protocol` only. `apps/web` and the proposed
+`@pov/application` depend on this package, not the reverse. It does not depend
+on `@pov/at-adapter`, `@pov/app-index`, `@pov/at-client`, an account host, or
+Koinos code, and it must not duplicate any of their implementation details.
 
 ## Status
 
-Status: scaffold — not yet implemented.
+Status: partially implemented — the safe Swarm feed view is runnable, while the
+broader application read surface remains proposed.

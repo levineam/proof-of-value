@@ -1,95 +1,73 @@
 # Roadmap
 
-This roadmap tracks the nine implementation units from
-`docs/plans/2026-07-20-001-feat-parallel-prototype-foundation-plan.md`, the
-plan governing the collaboration-ready PoV developer preview. Status here
-reflects what is built versus designed, not product completion.
+The active roadmap is the [Swarm Market Entry Foundation plan](docs/plans/2026-08-04-001-feat-swarm-market-entry-foundation-plan.md).
+It supersedes the July parallel-prototype plan for product sequencing while
+preserving that plan as protocol-history evidence.
 
-## Sequencing
+## Current sequence
 
-1. Reproducible toolchain + Koinos feasibility proof (U1).
-2. Shared protocol and application contracts (U2).
-3. Web experience, live AT adapter, Koinos foundations, and bridge/index in
-   parallel (U3-U6).
-4. Cross-protocol proof, then the read-only collaborator preview (U7, U9).
-5. Contributor documentation and maturity labeling against the working
-   repository (U8).
+1. **U1 — durable product story:** make one self-referential Swarm feed the
+   repository front door and label older artifacts as history. **Implemented
+   foundation story:** the repository narrative, product brief, architecture,
+   roadmap, and durable context now describe the Swarm market-entry boundary;
+   the runnable shell is delivered by U4.
+2. **U2 — contracts and fixtures:** define account, ordinary-post, feed
+   admission, lifecycle, and provenance boundaries. **Implemented feed subset:**
+   runtime validators, vectors, and a safe application view are runnable;
+   broader Koinos/protobuf contracts remain proposed.
+3. **U3 — authorized AT client boundary:** specify safe future member actions
+   and the account-hosting production gate. **Implemented contract boundary:**
+   deterministic fakes and safe outcomes exist; live OAuth/PDS operations are
+   proposed.
+4. **U4 — single-feed shell:** replace the web placeholder with a
+   fixture-backed, truthfully inert Swarm feed. **Implemented fixture shell:**
+   the app builds and serves one feed; live account, publication, moderation,
+   and settlement actions remain inert.
+5. **U5 — middle-layer alignment:** reconcile observation, admission, index,
+   and application responsibilities. **Implemented boundary documentation:**
+   reconciliation rules are explicit; middle-layer runtime services remain
+   proposed.
+6. **U6 — collaborator workstreams:** five bounded tracks now provide the
+   active contributor path, contracts, maturity, prerequisites, non-goals,
+   acceptance examples, verification, and coordination points. **Implemented
+   documentation foundation:** no underlying live service is implied.
+7. **U7 — foundation verification:** repository-wide truth, link, boundary,
+   credential-hygiene, and generated-artifact checks run through
+   `npm run verify:foundation`. **Implemented credential-free gate:** it runs
+   deterministic local package tests, typechecking, and the web build without
+   an AT/Koinos network probe.
 
-## Units
+## Current maturity
 
-### U1. Reproducible repository and toolchain foundation — **network gate blocked**
-Turn the document repository into a cloneable workspace and prove the current
-Koinos compile/deploy/event path before shared schemas harden around it.
-**Status:** npm workspace and root tooling exist; the mockup source is
-tracked (`design/mockup/`); `contracts/koinos/spike/` builds and passes its
-local event test. Its probe script is ready to deploy and decode the same event
-on a Koinos test network, but no live deployment, invocation, or event retrieval
-has succeeded yet. U2 remains gated on that evidence; see
-`docs/development/toolchain-evidence.md` for the exact dependencies.
+| Area | State | Evidence and limit |
+| --- | --- | --- |
+| Single Swarm product | **Implemented foundation** | Product brief, contracts, fixtures, and one truthfully inert feed shell exist; no live service. |
+| Web application | **Implemented fixture shell** | `apps/web` builds and renders one feed; controls are simulated or disabled. |
+| Dual-marketplace mockup | **Simulated historical vision** | Browser-local data and hard-coded calculations in `design/mockup`; no AT or chain connection. |
+| AT identity, account, and publishing | **Proposed** | No PDS, OAuth flow, account creation, or live writes. |
+| Feed admission and application index | **Proposed** | Existing packages are scaffolds. |
+| PoV evaluation and allocation | **Simulated / proposed** | The shell and mockup show labeled local values; live policy and settlement are not implemented. |
+| Koinos spike | **Implemented local feasibility evidence** | Builds and passes its local event test. |
+| Live Koinos proof | **Blocked** | No successful testnet deploy, invoke, and event-retrieval round trip. |
+| Contributor workstreams | **Implemented documentation foundation** | Five packets describe bounded proposed work; they do not authorize live operations. |
+| Token economics, moderation operations, and public launch | **Deferred** | Require product and operational decisions not settled here; no token launch, investment product, or public beta. |
 
-### U2. Versioned protocol and application contracts — designed, not built
-Define the stable protobuf, JSON, manifest, and application-view seams that
-let all four implementation tracks work independently.
-**Status:** `spec/protocol/`, `spec/vectors/`, `packages/protocol/`, and
-`packages/application-contracts/` are scaffolded (README + inert
-`package.json`, one placeholder JSON Schema stub). No schemas, vectors, or
-implementations exist yet.
+## What success means for this foundation
 
-### U3. Real public AT read adapter — designed, not built
-Retrieve and normalize real AT content for the feed while preserving exact
-version provenance.
-**Status:** `packages/at-adapter/` is scaffolded. No adapter code exists yet.
+A collaborator should be able to clone the repository, understand why the first
+market is PoV itself, inspect the documented foundation, trace the proposed
+authority boundaries, and select a bounded task from
+[docs/workstreams](docs/workstreams/README.md). A coherent fixture-backed feed
+still depends on U2-U4; this repository is not a working end-to-end product.
 
-### U4. Import and refine the feed experience — mockup exists, not yet integrated
-Bring the existing mockup into the repository and turn it into a polished
-developer-preview surface backed by application interfaces.
-**Status:** the standalone mockup (`design/mockup/`) is built and runs with
-browser-local state and a hard-coded reward calculation; it has not yet been
-reconstructed into `apps/web/` against `@pov/application-contracts`. A
-skeletal `apps/web/app` directory exists but is not yet the integrated
-preview.
+## Preserved history
 
-### U5. Upgradeable Koinos contract foundations — designed, not built
-Fully implement the PoV attestation/evaluation foundation and produce
-bounded, compiling token and identity foundations for architectural review.
-**Status:** `contracts/koinos/pov/`, `contracts/koinos/token/`,
-`contracts/koinos/identity/`, and `contracts/koinos/test-vectors/` are
-scaffolded (README only — these are AssemblyScript projects, not npm
-workspaces). Only `contracts/koinos/spike/` (a feasibility scaffold, not this
-unit's deliverable) is built and tested today.
+The [July plan](docs/plans/2026-07-20-001-feat-parallel-prototype-foundation-plan.md)
+and [design mockup](design/mockup/README.md) remain useful historical artifacts.
+They do not authorize a two-marketplace MVP, live AT integration, or a live
+Koinos proof.
 
-### U6. Bridge, index, and application-service boundary — designed, not built
-Join normalized AT observations and versioned Harbinger events into a
-noncanonical product view.
-**Status:** `packages/app-index/` and `packages/application/` are scaffolded.
-No projection, decoding, or query code exists yet.
+## Contribution terms
 
-### U7. Reproducible AT-to-Harbinger protocol proof — designed, not built
-Demonstrate the architectural thesis with one real cross-protocol thread
-visible in the web client.
-**Status:** `tests/protocol-proof/` and `scripts/protocol-proof/` are
-scaffolded. No fact attestation or evaluation has been recorded on Harbinger
-or another Koinos test network; no proof manifest exists yet.
-
-### U8. Contributor-facing project package — in progress
-Make the repository understandable and reviewable for prospective
-collaborators.
-**Status:** `ARCHITECTURE.md`, this `ROADMAP.md`, and `CONTRIBUTING.md` exist.
-`docs/development/getting-started.md`, `component-map.md`, `open-questions.md`,
-`demo-script.md`, `upgrades.md`, and `.github/CODEOWNERS` are not yet written.
-The outbound license is **MIT** (`LICENSE`). Inbound contribution terms (plan
-R23) still need to be stated before external contributions are accepted.
-
-### U9. Collaborator-facing read-only deployment — designed, not built
-Give prospective contributors a hosted, read-only view of the feed and protocol
-evidence without widening signing or operational authority.
-**Status:** not started. No deployment exists yet, hosted or otherwise.
-
-## What "done" means here
-
-"Done" above means the unit's stated verification passed for what currently
-exists — not that the product works end to end. Per the plan's Definition of
-Done, unfinished OAuth, comments, wallet, sponsorship, settlement, and claim
-capabilities remain identified as design-only or deferred wherever they
-appear, and no UI, API, document, or demo represents design-only or
-test-fixture state as live protocol state.
+The outbound license is [MIT](LICENSE). Inbound contribution terms remain
+unsettled before external contributions are accepted.

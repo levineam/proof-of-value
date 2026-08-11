@@ -1,4 +1,8 @@
-# Feed mockup (design reference)
+# Feed mockup (historical design reference)
+
+> **Status:** Implemented historical vision and simulated browser-local
+> interaction. This is not the Swarm MVP, and it has no AT Protocol, Koinos, or
+> live application connection.
 
 A standalone Next.js mockup of the primary feed experience: ranked posts with
 stake-weighted upvote/downvote controls, per-item pending-reward display, a
@@ -11,9 +15,10 @@ budget, demonstrating the plural-marketplaces claim of §12. All state is
 browser-local and the reward calculation is hard-coded — nothing here talks to
 AT Protocol or a chain.
 
-This is the U4 starting point (see `docs/plans/`, unit U4): U4 calls for
-reconstructing the experience inside `apps/web` against
-`@pov/application-contracts`, with real provenance labels replacing mock state.
+This is a visual and interaction reference for the older plural-marketplace
+vision (see `docs/plans/`, unit U4). The active U4 target is one Swarm feed in
+`apps/web` backed by shared fixtures and explicit provenance labels, not a
+reconstruction of this two-marketplace screen.
 Until then it runs on its own:
 
 ```bash

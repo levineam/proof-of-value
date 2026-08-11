@@ -1,5 +1,13 @@
 # Proof of Value architecture diagram specification
 
+> **Status — long-term topology, not the current Swarm MVP:** This is the
+> historical white-paper architecture for the future cross-protocol settlement
+> path. It intentionally retains its Koinos topology. The current MVP is a
+> fixture-backed single Swarm feed with U2 contracts and a U4 shell; public AT
+> observation, account provisioning, admission/index/application services, and
+> Koinos settlement remain proposed. For current boundaries, see
+> [`ARCHITECTURE.md`](../ARCHITECTURE.md).
+
 This specification is authoritative for the white paper's generated architecture infographic. The prose in `WHITEPAPER.md` remains authoritative if an image-generation result conflicts with this document.
 
 ## Canvas and visual system

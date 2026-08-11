@@ -20,14 +20,17 @@ test in parallel instead of inventing their own shared boundary independently.
 **U2** (Versioned protocol and application contracts), depending on U1's proven
 Koinos protobuf/codec path.
 
-## Will expose
+## Exposes now
 
-- Versioned protobuf message definitions for fact-attestation and evaluation
-  commands/events (mirrored from `spec/protocol/koinos/pov.proto`).
-- Generated/validated TypeScript types and runtime validators for content
-  references, observations, application views, provenance, and proof
-  manifests.
-- Golden vectors (`spec/vectors/`) that every other package's tests conform to.
+- Dependency-free TypeScript types and runtime validators for ordinary-post
+  publication outcomes, URI-plus-CID admission facts, lifecycle observations,
+  tombstones, provenance, and observation precedence. The selector requires a
+  validated DID-to-PDS resolution and refuses observations from another DID or
+  stale PDS before comparing ordering evidence.
+- Golden JSON vectors under `spec/vectors/swarm-feed/`; positive and negative
+  vectors run through the same exported validators.
+
+Protobuf/Koinos fact-attestation remains separate and proposed for this package.
 
 ## Dependency direction
 
@@ -39,4 +42,5 @@ and this package is the only thing all of them share.
 
 ## Status
 
-Status: scaffold — not yet implemented.
+Status: partially implemented — the Swarm feed contract subset is runnable;
+Koinos/protobuf contracts remain proposed.

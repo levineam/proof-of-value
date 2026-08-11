@@ -12,6 +12,12 @@ deepened: 2026-07-20
 
 # PoV Parallel Prototype Foundation - Plan
 
+> **Superseded for current market-entry sequencing.** The August 2026 Swarm
+> Market Entry Foundation plan is now authoritative for the first product:
+> one self-referential feed with ordinary AT social posts and PoV views. This
+> July plan remains protocol-history and vision evidence; its live cross-
+> protocol proof and dual-marketplace preview are not the current MVP.
+
 ## Goal Capsule
 
 - **Objective:** Produce a collaboration-ready PoV developer preview that makes the product vision compelling, demonstrates credible implementation on AT Protocol and Koinos, and gives prospective contributors clear places to engage.

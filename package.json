@@ -15,14 +15,18 @@
     "build": "npm run build --workspace=@pov/web",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc -p tsconfig.base.json --noEmit",
-    "test": "npm run test --if-present --workspaces",
-    "contracts:build": "COREPACK_ENABLE_PROJECT_SPEC=0 yarn --cwd contracts/koinos/spike build:release",
-    "contracts:test": "COREPACK_ENABLE_PROJECT_SPEC=0 yarn --cwd contracts/koinos/spike test",
-    "contracts:probe": "COREPACK_ENABLE_PROJECT_SPEC=0 yarn --cwd contracts/koinos/spike probe"
+    "test": "npm run test:foundation && npm run test --if-present --workspaces",
+    "test:foundation": "node --test tests/foundation/*.test.mjs",
+    "verify:foundation": "node scripts/verify-foundation.mjs",
+    "contracts:build": "COREPACK_ENABLE_PROJECT_SPEC=0 corepack yarn --cwd contracts/koinos/spike build:release",
+    "contracts:test": "COREPACK_ENABLE_PROJECT_SPEC=0 corepack yarn --cwd contracts/koinos/spike test",
+    "contracts:probe": "COREPACK_ENABLE_PROJECT_SPEC=0 corepack yarn --cwd contracts/koinos/spike probe"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "15.5.20",
     "@eslint/js": "9.32.0",
+    "ajv": "8.17.1",
+    "ajv-formats": "3.0.1",
     "eslint": "9.32.0",
     "typescript": "5.8.3",
     "typescript-eslint": "8.39.0"

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://proof-of-value.org/schema/swarm-account/v1",
+  "title": "Swarm account and authoritative resolution",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["did", "pds", "observedAt", "provenance"],
+  "properties": {
+    "did": { "type": "string", "pattern": "^did:[a-z0-9]+:[A-Za-z0-9._:%-]+$" },
+    "pds": { "type": "string", "pattern": "^https://" },
+    "repositoryRevision": { "type": "string", "minLength": 1 },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "provenance": { "$ref": "#/$defs/provenance" }
+  },
+  "$defs": { "provenance": { "type": "object", "additionalProperties": false, "required": ["source", "state", "observedAt"], "properties": { "source": { "enum": ["at-protocol", "swarm-admission", "pov-evaluation", "koinos", "fixture"] }, "state": { "enum": ["live", "fixture", "simulated", "unavailable", "unknown"] }, "observedAt": { "type": "string", "format": "date-time" } } } }
+}
