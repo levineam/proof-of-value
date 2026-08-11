@@ -4,9 +4,10 @@ import {
   POST_ACTIONS, POST_COLLECTION, createFakeAtClient, publicationFromResponse,
   createFakeProvisioningOutcomeSource, validateOriginTopology, validatePostAuthorizationRequest
 } from "../dist/index.js";
+import { validatePublication } from "@pov/protocol";
 
 const session = { actorDid: "did:plc:member", capabilityRef: "opaque-reference", expiresAt: "2099-01-01T00:00:00.000Z", collection: POST_COLLECTION, actions: POST_ACTIONS };
-const request = { session, actorDid: "did:plc:member", recordKey: "record-1", idempotencyKey: "idempotency-1", text: "A public post." };
+const request = { session, actorDid: "did:plc:member", recordKey: "record_4aZ6mL8pQ2xR", idempotencyKey: "retry_9bK7wN3sT5yH", text: "A public post." };
 
 test("authorizes only the post collection and create action", async () => {
   const port = createFakeAtClient();
@@ -26,25 +27,34 @@ for (const diagnostic of ["state-invalid", "pkce-invalid", "par-invalid", "dpop-
 test("publication succeeds only with URI and CID", async () => {
   const result = await createFakeAtClient().publish(request);
   assert.equal(result.state, "succeeded");
-  if (result.state === "succeeded") assert.match(result.uri, /^at:\/\/did:/);
+  if (result.state === "succeeded") {
+    assert.match(result.uri, /^at:\/\/did:/);
+    assert.equal(validatePublication(result).ok, true);
+  }
   const cidOnly = publicationFromResponse(request, { cid: "cid-only" });
   assert.equal(cidOnly.state, "unknown");
-  if (cidOnly.state === "unknown") assert.equal(cidOnly.retryBlocked, true);
-  const uriOnly = publicationFromResponse(request, { uri: "at://did:plc:member/app.bsky.feed.post/record-1" });
-  assert.equal(uriOnly.state, "unknown");
-  if (uriOnly.state === "unknown") assert.equal(uriOnly.retryBlocked, true);
-  const wrongRecord = publicationFromResponse(request, { uri: "at://did:plc:member/app.bsky.feed.post/record-2", cid: "bafywrongrecord" });
-  assert.deepEqual(wrongRecord, {
-    state: "unknown", recordKey: request.recordKey, idempotencyKey: request.idempotencyKey, diagnostic: "publication-unknown", retryBlocked: true
-  });
-  assert.deepEqual(publicationFromResponse(request, { uri: "at://did:plc:other/app.bsky.feed.post/record-1", cid: "bafywrongowner" }), {
-    state: "failed", recordKey: request.recordKey, idempotencyKey: request.idempotencyKey, diagnostic: "returned-did-mismatch"
-  });
+  assert.equal(cidOnly.recovery, "reconcile-required");
+  assert.equal(validatePublication(cidOnly).ok, true);
+  const uriOnly = publicationFromResponse(request, { uri: `at://did:plc:member/${POST_COLLECTION}/${request.recordKey}` });
+  assert.equal(uriOnly.state, "partial");
+  assert.equal(uriOnly.recovery, "reconcile-required");
+  assert.equal(validatePublication(uriOnly).ok, true);
+  const wrongRecord = publicationFromResponse(request, { uri: "at://did:plc:member/app.bsky.feed.post/record_2aZ6mL8pQ2xR", cid: "bafywrongrecord" });
+  assert.equal(wrongRecord.state, "failed");
+  assert.equal(validatePublication(wrongRecord).ok, true);
+  const wrongOwner = publicationFromResponse(request, { uri: `at://did:plc:other/${POST_COLLECTION}/${request.recordKey}`, cid: "bafywrongowner" });
+  assert.equal(wrongOwner.state, "failed");
+  assert.equal(validatePublication(wrongOwner).ok, true);
+  const malformedCid = publicationFromResponse(request, { uri: `at://did:plc:member/${POST_COLLECTION}/${request.recordKey}`, cid: "bad!" });
+  assert.equal(malformedCid.state, "unknown");
+  assert.equal(validatePublication(malformedCid).ok, true);
 });
 
 test("a post-create partial response blocks blind retry", async () => {
   const outcome = await createFakeAtClient({ publish: "partial" }).publish(request);
-  assert.deepEqual(outcome, { state: "unknown", recordKey: request.recordKey, idempotencyKey: request.idempotencyKey, diagnostic: "publication-unknown", retryBlocked: true });
+  assert.equal(outcome.state, "partial");
+  assert.equal(outcome.recovery, "reconcile-required");
+  assert.equal(validatePublication(outcome).ok, true);
 });
 
 test("publication and reconciliation outcomes never serialize member capability or draft content", async () => {
@@ -59,10 +69,12 @@ test("publication and reconciliation outcomes never serialize member capability 
   }
 });
 
-test("unknown publication blocks retry until deterministic reconciliation", async () => {
+test("unknown publication remains separate from deterministic reconciliation", async () => {
   const port = createFakeAtClient({ publish: "unknown", reconciliation: "pending" });
   const publication = await port.publish(request);
-  assert.deepEqual(publication, { state: "unknown", recordKey: request.recordKey, idempotencyKey: request.idempotencyKey, diagnostic: "publication-unknown", retryBlocked: true });
+  assert.equal(publication.state, "unknown");
+  assert.equal(publication.recovery, "reconcile-required");
+  assert.equal(validatePublication(publication).ok, true);
   const reconciliation = await port.reconcile(request);
   assert.equal(reconciliation.state, "pending");
   assert.equal(reconciliation.retryBlocked, true);
@@ -72,10 +84,13 @@ test("unknown publication blocks retry until deterministic reconciliation", asyn
 
 test("expiry, revocation, and unavailable PDS cannot publish", async () => {
   const expired = await createFakeAtClient().publish({ ...request, session: { ...session, expiresAt: "2000-01-01T00:00:00.000Z" } });
-  assert.deepEqual(expired.diagnostic, "session-expired");
-  assert.equal((await createFakeAtClient({ publish: "revoked" }).publish(request)).diagnostic, "session-revoked");
-  assert.equal((await createFakeAtClient({ publish: "unavailable" }).publish(request)).diagnostic, "pds-unavailable");
-  assert.equal((await createFakeAtClient().publish({ ...request, actorDid: "did:plc:other" })).diagnostic, "returned-did-mismatch");
+  assert.equal(expired.state, "failed");
+  const malformedExpiry = await createFakeAtClient().publish({ ...request, session: { ...session, expiresAt: "not-a-date" } });
+  assert.equal(malformedExpiry.state, "failed");
+  assert.equal((await createFakeAtClient({ publish: "revoked" }).publish(request)).state, "failed");
+  assert.equal((await createFakeAtClient({ publish: "unavailable" }).publish(request)).state, "failed");
+  assert.equal((await createFakeAtClient().publish({ ...request, actorDid: "did:plc:other" })).state, "failed");
+  assert.equal((await createFakeAtClient().publish({ ...request, recordKey: "short" })).state, "failed");
 });
 
 test("separate registrable app and PDS domains are mandatory", () => {

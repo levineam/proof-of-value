@@ -8,6 +8,9 @@ import { access, readFile, readdir, stat } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
+import Ajv2020 from "ajv/dist/2020.js";
+import addFormats from "ajv-formats";
+import { addSwarmSchemaKeywords } from "@pov/schema-validator";
 
 export const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -35,35 +38,48 @@ async function text(relativePath) {
 }
 
 export async function checkSchemasAndVectors() {
-  const schemas = [
-    "swarm-account.schema.json",
-    "post-publication.schema.json",
-    "feed-entry.schema.json",
-    "content-lifecycle.schema.json",
-  ];
-  for (const name of schemas) {
+  const schemaByKind = {
+    publication: "post-publication.schema.json",
+    admission: "feed-entry.schema.json",
+    lifecycle: "content-lifecycle.schema.json",
+    view: "swarm-feed-view.schema.json",
+  };
+  const schemaNames = ["swarm-account.schema.json", ...new Set(Object.values(schemaByKind))];
+  const documents = new Map(await Promise.all(schemaNames.map(async (name) => {
     const schema = JSON.parse(await text(path.join("spec/protocol", name)));
     if (!schema.$id?.includes("proof-of-value.org/schema/") || schema.type !== "object" || !Array.isArray(schema.required)) {
       fail(`schema ${name} is not a versioned Swarm object schema`);
     }
-  }
+    return [name, schema];
+  })));
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  addFormats(ajv);
+  addSwarmSchemaKeywords(ajv);
+  const validators = Object.fromEntries(Object.entries(schemaByKind).map(([kind, name]) => [kind, ajv.compile(documents.get(name))]));
 
   const vectorDirectory = path.join(repositoryRoot, "spec/vectors/swarm-feed");
   const vectors = await Promise.all((await readdir(vectorDirectory)).filter((name) => name.endsWith(".json")).map(async (name) => ({
     name,
     value: JSON.parse(await readFile(path.join(vectorDirectory, name), "utf8")),
   })));
-  const expectedKinds = new Set(["publication", "admission", "lifecycle", "view"]);
+  const expectedKinds = new Set(Object.keys(schemaByKind));
   for (const vector of vectors) {
     if (!expectedKinds.has(vector.value.kind) || typeof vector.value.valid !== "boolean" || !("value" in vector.value)) {
       fail(`invalid Swarm feed vector envelope: ${vector.name}`);
     }
   }
-  const expectedValidity = { publication: [true, false], admission: [true], lifecycle: [true, false], view: [true, false] };
+  const expectedValidity = { publication: [true, false], admission: [true, false], lifecycle: [true, false], view: [true, false] };
   for (const kind of expectedKinds) {
     const kindVectors = vectors.filter((vector) => vector.value.kind === kind);
     for (const valid of expectedValidity[kind]) if (!kindVectors.some((vector) => vector.value.valid === valid)) {
       fail(`Swarm feed vectors are missing an expected ${valid ? "positive" : "negative"} ${kind} case`);
+    }
+    for (const vector of kindVectors) {
+      const validator = validators[kind];
+      const actualValidity = validator(vector.value.value);
+      if (actualValidity !== vector.value.valid) {
+        fail(`schema validation disagrees with ${vector.name}: expected ${vector.value.valid}, received ${actualValidity}; ${ajv.errorsText(validator.errors)}`);
+      }
     }
   }
   if (!vectors.some((vector) => vector.name === "view-secret-invalid.json" && vector.value.valid === false)) {

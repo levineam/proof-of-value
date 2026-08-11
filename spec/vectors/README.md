@@ -12,7 +12,7 @@ The golden vectors home: the shared positive and negative test vectors that
 > encoder."
 > — plan U2 approach, `docs/plans/2026-07-20-001-feat-parallel-prototype-foundation-plan.md`
 
-These vectors are what lets `npm run vectors:check` prove that normalized
+These vectors are what lets `npm run verify:foundation` prove that normalized
 contract protobuf encodings and mapped JSON views agree on every shared case
 — without requiring the Koinos generator at ordinary test time. They will
 cover: valid content-reference round-tripping, missing-CID/mismatched-network/

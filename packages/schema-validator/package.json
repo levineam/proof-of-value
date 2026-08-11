@@ -1,0 +1,8 @@
+{
+  "name": "@pov/schema-validator",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Reusable AJV vocabulary for Swarm JSON Schema semantic bindings.",
+  "type": "module",
+  "exports": "./src/index.js"
+}

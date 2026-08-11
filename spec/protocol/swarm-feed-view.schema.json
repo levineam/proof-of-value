@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://proof-of-value.org/schema/swarm-feed-view/v1",
+  "title": "Browser-safe Swarm feed view",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["entry", "provenance"],
+  "properties": {
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["uri", "evaluatedCid", "admission", "lifecycle"],
+      "properties": {
+        "uri": { "$ref": "#/$defs/atUri" },
+        "evaluatedCid": { "type": "string", "minLength": 1 },
+        "currentCid": { "type": "string", "minLength": 1 },
+        "admission": { "$ref": "#/$defs/admission" },
+        "lifecycle": { "$ref": "#/$defs/lifecycle" }
+      }
+    },
+    "provenance": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/provenance" }
+    },
+    "allocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["amount", "source", "observedAt"],
+      "properties": {
+        "amount": { "type": "number" },
+        "source": { "enum": ["simulated", "settled"] },
+        "observedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "swarmViewBindings": true,
+  "swarmSettledAllocationProvenance": true,
+  "$defs": {
+    "atUri": { "type": "string", "pattern": "^at://did:[a-z0-9]+:[A-Za-z0-9._:%-]+/app\\.bsky\\.feed\\.post/[A-Za-z0-9._-]+$" },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "state", "observedAt"],
+      "properties": {
+        "source": { "enum": ["at-protocol", "swarm-admission", "pov-evaluation", "koinos", "fixture"] },
+        "state": { "enum": ["live", "fixture", "simulated", "unavailable", "unknown"] },
+        "observedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "admission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["admissionId", "subject", "decision", "policyVersion", "authority", "observedAt", "reasonCategory", "idempotencyKey"],
+      "properties": {
+        "admissionId": { "type": "string", "minLength": 8 },
+        "subject": { "type": "object", "additionalProperties": false, "required": ["uri", "cid"], "properties": { "uri": { "$ref": "#/$defs/atUri" }, "cid": { "type": "string", "minLength": 1 } } },
+        "decision": { "enum": ["admitted", "pending", "rejected", "revoked"] },
+        "policyVersion": { "type": "string", "minLength": 1 },
+        "authority": { "enum": ["system", "moderator", "member"] },
+        "observedAt": { "type": "string", "format": "date-time" },
+        "reasonCategory": { "enum": ["eligible", "review", "policy", "spam", "withdrawn", "unknown"] },
+        "idempotencyKey": { "type": "string", "minLength": 16, "maxLength": 128, "pattern": "^[A-Za-z0-9_-]+$" }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["did", "pds", "state", "observedAt", "ordering"],
+      "properties": {
+        "did": { "type": "string", "pattern": "^did:[a-z0-9]+:[A-Za-z0-9._:%-]+$" },
+        "pds": { "type": "string", "pattern": "^https://" },
+        "state": { "enum": ["current", "deleted", "inactive", "unavailable", "migrated"] },
+        "uri": { "$ref": "#/$defs/atUri" },
+        "currentCid": { "type": "string", "minLength": 1 },
+        "repositoryRevision": { "type": "string", "minLength": 1 },
+        "observedAt": { "type": "string", "format": "date-time" },
+        "ordering": { "type": "object", "additionalProperties": false, "required": ["sequence"], "properties": { "sequence": { "type": "integer", "minimum": 0 }, "commit": { "type": "string", "minLength": 1 } } },
+        "tombstone": { "type": "object", "additionalProperties": false, "required": ["uri", "lastKnownCid", "observedAt"], "properties": { "uri": { "$ref": "#/$defs/atUri" }, "lastKnownCid": { "type": "string", "minLength": 1 }, "observedAt": { "type": "string", "format": "date-time" } } }
+      },
+      "allOf": [
+        { "if": { "properties": { "state": { "const": "current" } } }, "then": { "required": ["uri", "currentCid"] } },
+        { "if": { "properties": { "state": { "const": "deleted" } } }, "then": { "required": ["tombstone"] } }
+      ],
+      "swarmLifecycleIdentity": true
+    }
+  }
+}

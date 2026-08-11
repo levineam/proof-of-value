@@ -25,6 +25,8 @@
   "devDependencies": {
     "@next/eslint-plugin-next": "15.5.20",
     "@eslint/js": "9.32.0",
+    "ajv": "8.17.1",
+    "ajv-formats": "3.0.1",
     "eslint": "9.32.0",
     "typescript": "5.8.3",
     "typescript-eslint": "8.39.0"

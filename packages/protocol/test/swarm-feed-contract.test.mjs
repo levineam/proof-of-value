@@ -27,6 +27,20 @@ test("observation selection is identity- and resolution-scoped", () => {
   assert.equal(selectAuthoritativeObservation(stalePds, stalePds, resolution), undefined);
 });
 
+test("a resolved candidate replaces a foreign current observation", () => {
+  const resolution = { did: "did:plc:member", pds: "https://pds.example", observedAt: "2026-08-09T12:05:00Z", provenance: { source: "at-protocol", state: "fixture", observedAt: "2026-08-09T12:05:00Z" } };
+  const foreign = { did: "did:plc:other", pds: "https://other.example", state: "current", observedAt: "2026-08-09T12:04:00Z", ordering: { sequence: 3 }, uri: "at://did:plc:other/app.bsky.feed.post/foreign-record", currentCid: "bafyForeign" };
+  const candidate = { did: "did:plc:member", pds: "https://pds.example", state: "current", observedAt: "2026-08-09T12:05:00Z", ordering: { sequence: 4 }, uri: "at://did:plc:member/app.bsky.feed.post/member-record", currentCid: "bafyMember" };
+  assert.equal(selectAuthoritativeObservation(foreign, candidate, resolution)?.did, "did:plc:member");
+});
+
+test("selection does not replace one post with another from the same account", () => {
+  const resolution = { did: "did:plc:member", pds: "https://pds.example", observedAt: "2026-08-09T12:05:00Z", provenance: { source: "at-protocol", state: "fixture", observedAt: "2026-08-09T12:05:00Z" } };
+  const current = { did: "did:plc:member", pds: "https://pds.example", state: "current", observedAt: "2026-08-09T12:04:00Z", ordering: { sequence: 3 }, uri: "at://did:plc:member/app.bsky.feed.post/first-record", currentCid: "bafyFirst" };
+  const candidate = { ...current, uri: "at://did:plc:member/app.bsky.feed.post/second-record", currentCid: "bafySecond", ordering: { sequence: 4 }, observedAt: "2026-08-09T12:05:00Z" };
+  assert.equal(selectAuthoritativeObservation(current, candidate, resolution)?.uri, current.uri);
+});
+
 test("runtime validators reject schema-invalid nested fields", () => {
   const admission = {
     admissionId: "short",

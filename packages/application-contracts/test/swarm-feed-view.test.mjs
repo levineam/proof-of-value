@@ -37,3 +37,11 @@ test("view validation bounds wide objects before materializing all children", ()
   assert.equal(result.ok, false);
   if (!result.ok) assert.equal(result.issues.includes("view exceeds inspection property limit"), true);
 });
+
+test("settled allocation requires live Koinos provenance", () => {
+  const settled = globalThis.structuredClone(safeVector.value);
+  settled.allocation.source = "settled";
+  assert.equal(validateSwarmFeedView(settled).ok, false);
+  settled.provenance.push({ source: "koinos", state: "live", observedAt: "2026-08-09T12:06:00Z" });
+  assert.equal(validateSwarmFeedView(settled).ok, true);
+});

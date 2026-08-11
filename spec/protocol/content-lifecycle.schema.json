@@ -16,6 +16,7 @@
     "ordering": { "type": "object", "additionalProperties": false, "required": ["sequence"], "properties": { "sequence": { "type": "integer", "minimum": 0 }, "commit": { "type": "string", "minLength": 1 } } },
     "tombstone": { "type": "object", "additionalProperties": false, "required": ["uri", "lastKnownCid", "observedAt"], "properties": { "uri": { "type": "string", "pattern": "^at://did:[a-z0-9]+:[A-Za-z0-9._:%-]+/app\\.bsky\\.feed\\.post/[A-Za-z0-9._-]+$" }, "lastKnownCid": { "type": "string", "minLength": 1 }, "observedAt": { "type": "string", "format": "date-time" } } }
   },
+  "swarmLifecycleIdentity": true,
   "allOf": [
     { "if": { "properties": { "state": { "const": "current" } } }, "then": { "required": ["uri", "currentCid"] } },
     { "if": { "properties": { "state": { "const": "deleted" } } }, "then": { "required": ["tombstone"] } }

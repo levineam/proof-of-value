@@ -75,11 +75,20 @@ export function validateSwarmFeedView(value: unknown): ViewValidation {
       if (lifecycle.value.tombstone?.uri !== undefined && lifecycle.value.tombstone.uri !== value.entry.uri) issues.push("tombstone must bind the entry URI");
     }
   }
-  if (!Array.isArray(value.provenance) || value.provenance.length === 0) issues.push("provenance labels are required");
-  else value.provenance.forEach((item) => { const result = validateProvenance(item); if (!result.ok) issues.push(...result.issues); });
+  const provenance = Array.isArray(value.provenance) ? value.provenance : undefined;
+  let hasLiveKoinosProvenance = false;
+  if (!provenance || provenance.length === 0) issues.push("provenance labels are required");
+  else provenance.forEach((item) => {
+    const result = validateProvenance(item); if (!result.ok) issues.push(...result.issues);
+    if (object(item) && item.source === "koinos" && item.state === "live") hasLiveKoinosProvenance = true;
+  });
   if (value.allocation !== undefined) {
-    if (!object(value.allocation) || typeof value.allocation.amount !== "number" || !["simulated", "settled"].includes(String(value.allocation.source)) || typeof value.allocation.observedAt !== "string") issues.push("allocation needs amount, labeled source, and observation time");
-    else only(value.allocation, ["amount", "source", "observedAt"], "allocation", issues);
+    const allocation = object(value.allocation) ? value.allocation : undefined;
+    if (!allocation || typeof allocation.amount !== "number" || !["simulated", "settled"].includes(String(allocation.source)) || typeof allocation.observedAt !== "string") issues.push("allocation needs amount, labeled source, and observation time");
+    else {
+      only(allocation, ["amount", "source", "observedAt"], "allocation", issues);
+      if (allocation.source === "settled" && !hasLiveKoinosProvenance) issues.push("settled allocation requires live Koinos provenance");
+    }
   }
   return issues.length ? { ok: false, issues } : { ok: true, value: value as unknown as SwarmFeedView };
 }

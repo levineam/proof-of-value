@@ -37,6 +37,9 @@ golden vectors that check both sides agree.
 
 ## Status
 
-Status: partially implemented — the Swarm feed schemas are present and tested
-through equivalent dependency-free runtime contracts. The proof-manifest and
-Koinos schema seams remain scaffold/proposed.
+Status: partially implemented — the Swarm feed schemas are compiled and run
+against golden vectors alongside equivalent dependency-free runtime contracts.
+Schemas that use `swarm*` cross-field keywords require the published
+`@pov/schema-validator` vocabulary before compilation; this is the supported
+AJV validation path, rather than an optional verifier-local extension. The
+proof-manifest and Koinos schema seams remain scaffold/proposed.

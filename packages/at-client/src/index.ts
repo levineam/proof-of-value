@@ -3,6 +3,8 @@
  * It intentionally has no OAuth callback, transport, credential, or PDS-admin implementation.
  */
 
+import { isCid, isOpaqueKey, parseAtPostUri, type Publication } from "@pov/protocol";
+
 export const POST_COLLECTION = "app.bsky.feed.post" as const;
 export const POST_ACTIONS = ["create"] as const;
 export type SafeDiagnostic =
@@ -61,10 +63,8 @@ export interface PublishRequest {
   readonly idempotencyKey: string;
   readonly text: string;
 }
-export type PublicationOutcome =
-  | { readonly state: "succeeded"; readonly uri: string; readonly cid: string; readonly recordKey: string; readonly idempotencyKey: string }
-  | { readonly state: "unknown"; readonly recordKey: string; readonly idempotencyKey: string; readonly diagnostic: "publication-unknown"; readonly retryBlocked: true }
-  | { readonly state: "failed"; readonly recordKey: string; readonly idempotencyKey: string; readonly diagnostic: PublishFailureDiagnostic };
+/** Every port outcome is a versioned publication fact; recovery policy belongs to the caller. */
+export type PublicationOutcome = Publication;
 export type ReconciliationOutcome =
   | { readonly state: "record-found"; readonly uri: string; readonly cid: string; readonly recordKey: string; readonly idempotencyKey: string }
   | { readonly state: "not-found"; readonly recordKey: string; readonly idempotencyKey: string; readonly retryBlocked: false; readonly diagnostic: "reconciliation-not-found" }
@@ -77,12 +77,19 @@ export interface AuthorizedAtPort {
 }
 
 const did = (value: string): boolean => /^did:[a-z0-9]+:[A-Za-z0-9._:%-]+$/.test(value);
-const atUriParts = (value: string): { did: string; recordKey: string } | undefined => {
-  const match = /^at:\/\/(did:[a-z0-9]+:[A-Za-z0-9._:%-]+)\/app\.bsky\.feed\.post\/([A-Za-z0-9._-]+)$/.exec(value);
-  return match ? { did: match[1], recordKey: match[2] } : undefined;
-};
 const nonEmpty = (value: string): boolean => value.trim().length > 0;
 const sameActions = (actions: readonly string[]): boolean => actions.length === 1 && actions[0] === "create";
+const observedAt = (): string => new Date().toISOString();
+type PublicationReason = NonNullable<Publication["reasonCategory"]>;
+const publication = (input: Pick<PublishRequest, "recordKey" | "idempotencyKey">, state: Publication["state"], reasonCategory?: PublicationReason): Publication => ({
+  recordKey: input.recordKey,
+  idempotencyKey: input.idempotencyKey,
+  state,
+  observedAt: observedAt(),
+  ...(reasonCategory ? { reasonCategory } : {}),
+  ...(["unknown", "partial"].includes(state) ? { recovery: "reconcile-required" as const } : {}),
+});
+const failedPublication = (input: Pick<PublishRequest, "recordKey" | "idempotencyKey">, reasonCategory: PublicationReason): Publication => publication(input, "failed", reasonCategory);
 
 export function validatePostAuthorizationRequest(request: PostAuthorizationRequest): SafeDiagnostic | undefined {
   if (!did(request.actorDid)) return "returned-did-mismatch";
@@ -93,8 +100,9 @@ export function validatePostAuthorizationRequest(request: PostAuthorizationReque
 export function validatePublishRequest(request: PublishRequest): PublishFailureDiagnostic | undefined {
   if (request.session.actorDid !== request.actorDid || !did(request.actorDid)) return "returned-did-mismatch";
   if (request.session.collection !== POST_COLLECTION || !sameActions(request.session.actions)) return "scope-invalid";
-  if (!nonEmpty(request.recordKey) || !nonEmpty(request.idempotencyKey) || !nonEmpty(request.text)) return "response-partial";
-  if (Date.parse(request.session.expiresAt) <= Date.now()) return "session-expired";
+  if (!isOpaqueKey(request.recordKey) || !isOpaqueKey(request.idempotencyKey) || !nonEmpty(request.text)) return "response-partial";
+  const expiresAt = Date.parse(request.session.expiresAt);
+  if (!Number.isFinite(expiresAt) || expiresAt <= Date.now()) return "session-expired";
   return undefined;
 }
 
@@ -102,14 +110,16 @@ export function validatePublishRequest(request: PublishRequest): PublishFailureD
 export function publicationFromResponse(input: Pick<PublishRequest, "actorDid" | "recordKey" | "idempotencyKey">, response: { uri?: string; cid?: string }): PublicationOutcome {
   const { actorDid, recordKey, idempotencyKey } = input;
   const correlation = { recordKey, idempotencyKey };
-  const returned = atUriParts(response.uri ?? "");
+  const returned = parseAtPostUri(response.uri);
   if (returned !== undefined && returned.did !== actorDid) {
-    return { state: "failed", ...correlation, diagnostic: "returned-did-mismatch" };
+    return failedPublication(correlation, "callback-mismatch");
   }
-  if (returned === undefined || !nonEmpty(response.cid ?? "") || returned.recordKey !== recordKey) {
-    return { state: "unknown", ...correlation, diagnostic: "publication-unknown", retryBlocked: true };
+  if (returned !== undefined && returned.recordKey !== recordKey) {
+    return failedPublication(correlation, "callback-mismatch");
   }
-  return { state: "succeeded", ...correlation, uri: response.uri!, cid: response.cid! };
+  if (returned !== undefined && response.cid === undefined) return publication(correlation, "partial", "unavailable");
+  if (returned === undefined || !isCid(response.cid ?? "")) return publication(correlation, "unknown", "unavailable");
+  return { ...publication(correlation, "succeeded"), uri: response.uri!, cid: response.cid };
 }
 
 /** Reject same registrable domains; real deployment must also use a Public Suffix List check. */
@@ -143,11 +153,11 @@ export function createFakeAtClient(options: FakeAtClientOptions = {}): Authorize
       return diagnostic ? { state: "denied", diagnostic } : authorization;
     },
     async publish(request) {
-      const invalid = validatePublishRequest(request); if (invalid) return { state: "failed", recordKey: request.recordKey, idempotencyKey: request.idempotencyKey, diagnostic: invalid };
-      if (options.publish === "unknown") return { state: "unknown", recordKey: request.recordKey, idempotencyKey: request.idempotencyKey, diagnostic: "publication-unknown", retryBlocked: true };
+      const invalid = validatePublishRequest(request); if (invalid) return failedPublication(request, invalid === "scope-invalid" ? "scope-escalation" : "invalid-request");
+      if (options.publish === "unknown") return publication(request, "unknown", "unavailable");
       if (options.publish === "partial") return publicationFromResponse(request, { uri: `at://${request.actorDid}/${POST_COLLECTION}/${request.recordKey}` });
-      if (options.publish === "revoked") return { state: "failed", recordKey: request.recordKey, idempotencyKey: request.idempotencyKey, diagnostic: "session-revoked" };
-      if (options.publish === "unavailable") return { state: "failed", recordKey: request.recordKey, idempotencyKey: request.idempotencyKey, diagnostic: "pds-unavailable" };
+      if (options.publish === "revoked") return failedPublication(request, "denied");
+      if (options.publish === "unavailable") return failedPublication(request, "unavailable");
       return publicationFromResponse(request, { uri: `at://${request.actorDid}/${POST_COLLECTION}/${request.recordKey}`, cid: "bafyfakecid" });
     },
     async reconcile(input) {
