@@ -48,6 +48,7 @@ export function addSwarmSchemaKeywords(ajv) {
     schemaType: "boolean",
     errors: false,
     validate: (enabled, value) => !enabled || value.allocation?.source !== "settled"
-      || value.provenance?.some((item) => item.source === "koinos" && item.state === "live") === true,
+      || (Array.isArray(value.provenance) && value.provenance.some((item) => item !== null
+        && typeof item === "object" && item.source === "koinos" && item.state === "live")),
   });
 }
