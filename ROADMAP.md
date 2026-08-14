@@ -6,32 +6,31 @@ preserving that plan as protocol-history evidence.
 
 ## Current sequence
 
-1. **U1 — durable product story:** make one self-referential Swarm feed the
-   repository front door and label older artifacts as history. **Implemented
-   foundation story:** the repository narrative, product brief, architecture,
-   roadmap, and durable context now describe the Swarm market-entry boundary;
-   the runnable shell is delivered by U4.
-2. **U2 — contracts and fixtures:** define account, ordinary-post, feed
+1. **Product story:** make one self-referential Swarm feed the repository
+   front door and label older artifacts as history. **Implemented foundation
+   story:** the repository narrative, product brief, architecture, roadmap,
+   and durable context now describe the Swarm market-entry boundary.
+2. **Feed contracts and fixtures:** define account, ordinary-post, feed
    admission, lifecycle, and provenance boundaries. **Implemented feed subset:**
    runtime validators, vectors, and a safe application view are runnable;
    broader Koinos/protobuf contracts remain proposed.
-3. **U3 — authorized AT client boundary:** specify safe future member actions
-   and the account-hosting production gate. **Implemented contract boundary:**
+3. **Future AT member actions:** specify safe future member actions and the
+   account-hosting production gate. **Implemented contract boundary:**
    deterministic fakes and safe outcomes exist; live OAuth/PDS operations are
    proposed.
-4. **U4 — single-feed shell:** replace the web placeholder with a
-   fixture-backed, truthfully inert Swarm feed. **Implemented fixture shell:**
-   the app builds and serves one feed; live account, publication, moderation,
-   and settlement actions remain inert.
-5. **U5 — middle-layer alignment:** reconcile observation, admission, index,
-   and application responsibilities. **Implemented boundary documentation:**
-   reconciliation rules are explicit; middle-layer runtime services remain
-   proposed.
-6. **U6 — collaborator workstreams:** five bounded tracks now provide the
-   active contributor path, contracts, maturity, prerequisites, non-goals,
-   acceptance examples, verification, and coordination points. **Implemented
+4. **Fixture-backed feed shell:** replace the web placeholder with a
+   truthfully inert Swarm feed. **Implemented fixture shell:** the app builds
+   and serves one feed; live account, publication, moderation, and settlement
+   actions remain inert.
+5. **Middle-layer responsibilities:** reconcile observation, admission,
+   index, and application responsibilities. **Implemented boundary
+   documentation:** reconciliation rules are explicit; middle-layer runtime
+   services remain proposed.
+6. **Contributor workstreams:** five bounded tracks now provide the active
+   contributor path, contracts, maturity, prerequisites, non-goals, acceptance
+   examples, verification, and coordination points. **Implemented
    documentation foundation:** no underlying live service is implied.
-7. **U7 — foundation verification:** repository-wide truth, link, boundary,
+7. **Foundation verification:** repository-wide truth, link, boundary,
    credential-hygiene, and generated-artifact checks run through
    `npm run verify:foundation`. **Implemented credential-free gate:** it runs
    deterministic local package tests, typechecking, and the web build without
@@ -58,7 +57,8 @@ A collaborator should be able to clone the repository, understand why the first
 market is PoV itself, inspect the documented foundation, trace the proposed
 authority boundaries, and select a bounded task from
 [docs/workstreams](docs/workstreams/README.md). A coherent fixture-backed feed
-still depends on U2-U4; this repository is not a working end-to-end product.
+still needs the feed contracts, future AT boundary, and feed shell to connect
+to live systems; this repository is not a working end-to-end product.
 
 ## Preserved history
 

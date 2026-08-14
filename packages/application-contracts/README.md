@@ -5,19 +5,19 @@ interfaces that the web client and application service agree on.
 
 ## Single responsibility
 
-> "U2 owns a framework-neutral feed, detail, and proof-evidence interface; U6
-> implements it and U4 consumes it through conforming fixtures until
-> integration."
-> — plan KTD12, `docs/plans/2026-07-20-001-feat-parallel-prototype-foundation-plan.md`
+The shared application-contract package owns a framework-neutral feed, detail,
+and proof-evidence interface. The proposed application service implements it,
+while the web shell consumes it through conforming fixtures until integration.
 
 This package defines the application read contract itself — not its
-implementation (`@pov/application`, U6) and not its consumer (`apps/web`, U4).
+implementation (`@pov/application`) and not its consumer (`apps/web`).
 Owning it here early lets the frontend and the application-service tracks
 build against the same interface without either one inventing the boundary.
 
-## Built by
+## Role in the foundation
 
-**U2** (Versioned protocol and application contracts).
+This package is the shared contract foundation for the feed and its future
+application service.
 
 ## Exposes now
 

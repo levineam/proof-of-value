@@ -137,7 +137,7 @@ export async function checkRepositoryTruth() {
   }
   for (const [file, phrases] of Object.entries({
     "README.md": ["fixture", "Proposed", "Blocked", "Deferred"],
-    "ROADMAP.md": ["U7", "Implemented", "Simulated", "Proposed", "Blocked", "Deferred"],
+    "ROADMAP.md": ["Foundation verification", "Implemented", "Simulated", "Proposed", "Blocked", "Deferred"],
     "docs/context/POV_PROJECT_CONTEXT.md": ["fixture", "proposed", "Blocked", "Deferred"],
     "ARCHITECTURE.md": ["Implemented", "Simulated", "Proposed", "Blocked", "Deferred"],
     "docs/product/SWARM_MVP.md": ["fixtures", "proposed", "does not demonstrate"],

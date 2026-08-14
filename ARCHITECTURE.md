@@ -7,14 +7,14 @@ marketplace: one feed for people building, testing, documenting, and critiquing
 Proof of Value. It describes both the runnable foundation and the boundaries
 the repository is preparing to build; it is not a report of live infrastructure.
 
-**Implemented:** U2's runnable Swarm feed contracts and fixtures, U4's
-fixture-backed single-feed shell, the future member-action contract in
-`@pov/at-client`, and a locally tested isolated Koinos spike. **Simulated:**
-the shell's votes and allocations. **Proposed:** public AT observation (U3),
-account provisioning, feed admission/revocation operations, the app index,
-the application service, and Koinos settlement. **Blocked:** a live Koinos
-testnet round trip is unproven. **Deferred:** a production PDS, OAuth and live
-posting, moderation operations, and live settlement.
+**Implemented:** runnable Swarm feed contracts and fixtures, a fixture-backed
+single-feed shell, the future member-action contract in `@pov/at-client`, and
+a locally tested isolated Koinos spike. **Simulated:** the shell's votes and
+allocations. **Proposed:** public AT observation, account provisioning, feed
+admission/revocation operations, the app index, the application service, and
+Koinos settlement. **Blocked:** a live Koinos testnet round trip is unproven.
+**Deferred:** a production PDS, OAuth and live posting, moderation operations,
+and live settlement.
 
 AT Protocol is canonical for account identity and ordinary public post records.
 Swarm owns feed admission, moderation policy, ranking, and PoV views. Koinos
@@ -52,10 +52,10 @@ separate provenance.
 
 | Component | Responsibility | Current state |
 | --- | --- | --- |
-| `packages/protocol` + `packages/application-contracts` (U2) | Versioned Swarm facts and browser-safe feed-view contract | **Implemented:** runnable validators and vectors; broader read surface **proposed** |
-| `apps/web` (U4) | Fixture-backed single-feed shell and provenance display | **Implemented:** local shell; votes and allocations **simulated** |
+| `packages/protocol` + `packages/application-contracts` | Versioned Swarm facts and browser-safe feed-view contract | **Implemented:** runnable validators and vectors; broader read surface **proposed** |
+| `apps/web` | Fixture-backed single-feed shell and provenance display | **Implemented:** local shell; votes and allocations **simulated** |
 | `packages/at-client` | Future member-authorized AT actions and reconciliation contract | **Implemented:** dependency-free contract scaffold; network/OAuth **proposed** |
-| `packages/at-adapter` (U3) | Public read and lifecycle observation only | **Proposed:** package scaffold; no live public reads |
+| `packages/at-adapter` | Public read and lifecycle observation only | **Proposed:** package scaffold; no live public reads |
 | Proposed account host | Provisioning, custody, recovery, and PDS operations | **Proposed:** no host/PDS selected or operated |
 | Feed-admission authority | Versioned admission and revocation facts | **Proposed**; no authority exists |
 | `packages/app-index` | Rebuildable projection of observations and admission facts | **Proposed** scaffold; no index exists |

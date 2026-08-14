@@ -6,15 +6,12 @@ separately authorized evaluation.
 
 ## Single responsibility
 
-> "Select a real public AT URI, re-observe it through the trusted bridge
-> immediately before submission, and submit its DID, URI, CID, signed
-> observation time, and verification evidence under the configured attestor
-> authority. After the contract accepts that attestation under the configured
-> freshness policy, submit a separate development evaluation referencing it.
-> Generate the versioned proof manifest from both authorities, commands,
-> transactions, blocks, decoded events, immutable deployed-code hash, source
-> revision, and reproducible build provenance."
-> — plan U7 approach, `docs/plans/2026-07-20-001-feat-parallel-prototype-foundation-plan.md`
+The intended workflow selects a real public AT URI, re-observes it before
+submission, records the associated DID, URI, CID, observation time, and
+verification evidence under an attestor authority, then records a separately
+authorized evaluation. It produces a versioned proof manifest that includes
+the transactions, decoded events, deployed-code hash, source revision, and
+build provenance.
 
 These scripts are maintainer-only operator tooling, not a pull-request CI
 gate: credentialed Harbinger attestation and evaluation are operator actions
@@ -35,9 +32,9 @@ never receive these credentials or an arbitrary sponsored-transaction path.
 - A re-proof path for after a Harbinger chain reset, retaining the prior
   manifest as labeled history rather than deleting it.
 
-## Built by
+## Role in the foundation
 
-**U7** (Reproducible AT-to-Harbinger protocol proof).
+This is the proposed reproducible AT-to-Harbinger protocol-proof workflow.
 
 ## Status
 

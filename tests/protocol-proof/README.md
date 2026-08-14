@@ -7,10 +7,9 @@ and the post-detail screen.
 
 ## Single responsibility
 
-> "Demonstrate the architectural thesis with one real cross-protocol thread
-> visible in the web client... Re-running read-only verification against the
-> same transaction produces the same evidence view."
-> — plan U7 goal and test scenario, `docs/plans/2026-07-20-001-feat-parallel-prototype-foundation-plan.md`
+The intended test demonstrates one real cross-protocol thread visible in the
+web client and confirms that read-only verification of the same transaction
+produces the same evidence view.
 
 This harness exercises the read-only half of the proof (the part any
 contributor or CI can run without credentials): validating the checked-in
@@ -22,12 +21,14 @@ the versioned verifier policy requires. It does not itself perform the
 credentialed Harbinger writes — those are operator actions coordinated by
 `scripts/protocol-proof/`.
 
-## Built by
+## Role in the foundation
 
-**U7** (Reproducible AT-to-Harbinger protocol proof), depending on U3-U6.
+This is the proposed read-only verification half of the AT-to-Harbinger
+protocol proof. It depends on the future public-observation, feed-shell,
+index, and application-service boundaries.
 
 ## Status
 
 Status: scaffold — not yet implemented. No proof has been recorded yet; the
-only built-and-tested on-chain artifact today is the U1 feasibility spike in
+only built-and-tested on-chain artifact today is the local feasibility spike in
 `contracts/koinos/spike/`.
