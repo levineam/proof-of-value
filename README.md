@@ -6,18 +6,19 @@ Blockchain consensus algorithms are technical infrastructure: they secure a ledg
 
 ## SWARM
 
-Proof-of-value is achieved through a stake-weighted autonomous reward mechanism (hence "SWARM"). Accounts are able to influence the distribution of newly created tokens in proportion to their stake in the token and based on their upvotes and downvotes. This is a descendant of the "proof-of-brain" algorithm in first released in Steem and still powering Hive. The primary distinction is simplicity. My thesis is that proof-of-brain was both the secret to Steem/Steemit's success, and the seed of its demise. Stake-weighted autonomous reward mechanisms are great for effectively gamifying community growth, however, they are extremely vulnerable to being gamed, amplifying negative emotions, and degenerating into profit-maximizing behaviors. 
+Proof-of-value is achieved through a stake-weighted autonomous reward mechanism (hence "SWARM"). Accounts are able to influence the distribution of newly created tokens in proportion to their stake in the token and based on their upvotes and downvotes. This is a descendant of the "proof-of-brain" algorithm first released in Steem and still powering Hive. It is my belief that proof-of-brain was both the secret to Steem/Steemit's success, and the seed of its demise. Stake-weighted autonomous reward mechanisms are great for effectively gamifying community growth, however, they are extremely vulnerable to being gamed, amplifying negative emotions, and degenerating into profit-maximizing behaviors. Tie this gamification into the core economics of a blockchain which also contains numerous other components with their own cryptoeconomic imperatives and it's a recipe for disaster.
 
 ### Mitigating Gaming
 
-1. Upgradeability. When the reward mechanism in Steem or Hive are gamed, any blockchain-level solution must be resolved as a hardfork. By implementing this on a Koinos-based blockchain as a smart contract, we immediately address that issue.
-2. Multi-coin. As this will be a smart contract, users are free to launch their own versions with their own rules. This doesn't just act as a check on the developers of the initial implementation, it provides genuine alternatives.
+1. Isolation. Unlike with Steem or Hive proof-of-value is just a smart contract running on a general purpose blockchain, hence any issues with this application should be largely irrelevant to the functioning of the blockchain itself. 
+2. Upgradeability. When the reward mechanism in Steem or Hive are gamed, any blockchain-level solution must be resolved as a hardfork. By implementing this on a Koinos-based blockchain as a smart contract, we immediately address that issue.
+3. Multi-coin. As this will be a smart contract, users are free to launch their own versions with their own rules. This doesn't just act as a check on the developers of the initial implementation, it provides genuine alternatives.
 
 ## Prototype App
 
-Some of the biggest challenges that Koinos faced was bootstrapping an initial user base and then storing the ever-increasing quantity of text that they contributed to the blockchain which was both low value and costly to store. I propose killing two birds with one stone by simply integrating AT Protocol which would effectively function as the content-management system for the application. 
+One of the biggest challenges that Koinos faced was bootstrapping an initial user base. One of the biggest challenges that Steem faced was storing the ever-increasing quantity of text that users contributed to the blockchain which was both low value and costly to store. I propose killing two birds with one stone by simply integrating AT Protocol.
 
-AT Protocol would enable us to tap into an existing community and existing content management and delivery infrastructure so that we can focus on refining the reward mechanism. Ultimately, this strategy boils down to a hyper-focused implemented of a stake-weighted autonomous reward mechanism. 
+AT Protocol would enable us to tap into an existing community plus existing content management and delivery infrastructure so that we can focus on refining our specific application. Ultimately, this strategy boils down to a hyper-focused implementation of a stake-weighted autonomous reward mechanism made possible by a fee-less general purpose blockchain. 
 
 This repo is more of a thought-experiment than an MVP. It includes a fairly complete set of proposed implementations of the building blocks of this project. The goal is to give people enough insight into the proposal to understand the vision, provide feedback, and ideally begin contributing. 
 
