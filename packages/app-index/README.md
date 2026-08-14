@@ -13,9 +13,9 @@ host, member-action client, or financial record. When Koinos is eventually
 used, its canonical settlement events are an input to this projection—not an
 authority this package may rewrite or replace.
 
-## Built by
+## Role in the foundation
 
-**U6** (index and application-service boundary), alongside
+This is the proposed index and application-service boundary, alongside
 `@pov/application`.
 
 ## Will expose

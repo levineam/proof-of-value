@@ -49,10 +49,10 @@ protocol claims, and the [architecture diagram specification](docs/architecture-
 
 ## What exists today
 
-- **Implemented:** U2 Swarm contracts and vectors, a credential-free U3
-  authorized-action boundary, a fixture-backed single-feed shell, the
-  standalone historical mockup, and a Koinos spike contract that builds and
-  passes a local event test.
+- **Implemented:** runnable Swarm feed contracts and vectors, a
+  credential-free future member-action boundary, a fixture-backed single-feed
+  shell, the standalone historical mockup, and a Koinos spike contract that
+  builds and passes a local event test.
 - **Simulated:** the shell and mockup's feed state, voting, and allocation
   calculations; they are not AT, Koinos, or live Swarm protocol state.
 - **Proposed:** public AT observation, account hosting/provisioning, feed

@@ -19,9 +19,10 @@ DID-based AT URI locates the logical record; the observed CID binds the exact
 version. Deletion retains only minimal tombstone evidence and never rehydrates
 the post body or embeds.
 
-## Built by
+## Role in the foundation
 
-**U3** (public AT observation boundary), depending on U2's shared contracts.
+This is the proposed public AT observation boundary. It will implement the
+shared lifecycle and provenance contracts from `@pov/protocol`.
 
 ## Will expose
 
@@ -40,5 +41,5 @@ either, on `@pov/at-client`, on an account host, or on Koinos code.
 ## Status
 
 Status: proposed — package scaffold only; no live public-read implementation
-exists. The U2 lifecycle and provenance contracts it must implement are
+exists. The shared lifecycle and provenance contracts it must implement are
 already runnable.

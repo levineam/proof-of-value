@@ -7,18 +7,17 @@ proof manifest.
 
 ## Single responsibility
 
-> "Define the stable protobuf, JSON, manifest, and application-view seams that
-> let all four implementation tracks work independently."
-> — plan U2 goal, `docs/plans/2026-07-20-001-feat-parallel-prototype-foundation-plan.md`
+The package defines stable protobuf, JSON, manifest, and application-view seams
+so components can share a boundary instead of inventing their own.
 
 This package is the gate: owning one stable schema-and-vector set here is what
 lets the web, AT-adapter, bridge/index, and Koinos-contract tracks build and
 test in parallel instead of inventing their own shared boundary independently.
 
-## Built by
+## Role in the foundation
 
-**U2** (Versioned protocol and application contracts), depending on U1's proven
-Koinos protobuf/codec path.
+This package provides the shared protocol-contract foundation. The Koinos
+protobuf/codec path remains a separate, locally proven feasibility spike.
 
 ## Exposes now
 

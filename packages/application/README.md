@@ -14,10 +14,9 @@ never presents an index projection as canonical content or token balance. The
 web client depends on this read boundary rather than AT/Koinos SDK types or
 write-path details.
 
-## Built by
+## Role in the foundation
 
-**U6** (index and application-service boundary), alongside
-`@pov/app-index`.
+This is the proposed application-service boundary, alongside `@pov/app-index`.
 
 ## Will expose
 
@@ -34,6 +33,6 @@ package. It never imports AT write/signing paths or Koinos settlement code.
 
 ## Status
 
-Status: proposed — package scaffold only. The U2 read contract and U4
+Status: proposed — package scaffold only. The shared read contract and
 fixture-backed shell demonstrate the intended consumer boundary, not a running
 application service.
