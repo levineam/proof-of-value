@@ -1,28 +1,25 @@
-# Proof of Value
+This repo is intended as a proof of concept for a blockchain application tentatively titled "Swarm" powered by a social consensus algorithm tentatively titled "proof-of-value." 
 
-Proof of Value is a small, open-source experiment in whether a community can
-recognize work that helps it and distribute stake accordingly. The product is a
-marketplace for information, not a token.
+## Proof-of-Value
 
-## Start with Swarm
+Blockchain consensus algorithms are technical infrastructure: they secure a ledger and meter its resources by charging for transactions. That model suits a financial system well and explains why, more than a decade in, DeFi remains the dominant use case for blockchains. I believe the missing piece may be a **social consensus algorithm**: a decentralized way to leverage the wisdom of the crowd to value an arbitrary piece of information and distribute cryptocurrency according to that valuation. Because it runs on ordinary judgments rather than paid operators, it has to be free to use, require no expertise, and impose no barriers to entry — which is why a chain that charges for every transaction is not ideal.
 
-Blockchain consensus algorithms are technical infrastructure: they secure a ledger and meter its resources by charging for transactions. That model suits a financial system well and explains why, more than a decade in, DeFi remains the dominant use case for blockchains. The missing piece may be a **social consensus algorithm**: a decentralized way to leverage the wisdom of the crowd to value an arbitrary piece of information and distribute newly issued tokens according to that valuation. Because it runs on ordinary judgments rather than paid operators, it has to be free to use, require no expertise, and impose no barriers to entry — which is why a chain that charges for every small act of participation cannot host one.
+## SWARM
 
-This makes possible **turnkey marketplaces for any abstract information**: any group can stand one up to reward the information its own members produce, according to its own idea of what is valuable. 
+Proof-of-value is achieved through a stake-weighted autonomous reward mechanism (hence "SWARM"). Accounts are able to influence the distribution of newly created tokens in proportion to their stake in the token and based on their upvotes and downvotes. This is a descendant of the "proof-of-brain" algorithm in first released in Steem and still powering Hive. The primary distinction is simplicity. My thesis is that proof-of-brain was both the secret to Steem/Steemit's success, and the seed of its demise. Stake-weighted autonomous reward mechanisms are great for effectively gamifying community growth, however, they are extremely vulnerable to being gamed, amplifying negative emotions, and degenerating into profit-maximizing behaviors. 
 
-The first product is **Swarm**: one project-specific feed for people building,
-testing, documenting, and critiquing Proof of Value. A person should be able to
-read the feed without knowing AT Protocol or already having a Bluesky account.
-In the intended design, a Swarm account is backed by an AT Protocol identity and
-an ordinary post is an `app.bsky.feed.post`; Swarm adds project-feed admission,
-evaluation, and allocation views around that public content.
+### Mitigating Gaming
 
-This is a proposed product direction, with a fixture-backed foundation rather
-than a live service. The current [`apps/web`](apps/web) application is the
-truthfully inert Swarm shell; it does not connect an account or network.
-Account creation, OAuth, PDS operation, post publication, moderation, and
-Koinos settlement are not built. The Koinos spike is local feasibility evidence
-only; no live testnet round trip has been proven.
+1. Upgradeability. When the reward mechanism in Steem or Hive are gamed, any blockchain-level solution must be resolved as a hardfork. By implementing this on a Koinos-based blockchain as a smart contract, we immediately address that issue.
+2. Multi-coin. As this will be a smart contract, users are free to launch their own versions with their own rules. This doesn't just act as a check on the developers of the initial implementation, it provides genuine alternatives.
+
+## Prototype App
+
+Some of the biggest challenges that Koinos faced was bootstrapping an initial user base and then storing the ever-increasing quantity of text that they contributed to the blockchain which was both low value and costly to store. I propose killing two birds with one stone by simply integrating AT Protocol which would effectively function as the content-management system for the application. 
+
+AT Protocol would enable us to tap into an existing community and existing content management and delivery infrastructure so that we can focus on refining the reward mechanism. Ultimately, this strategy boils down to a hyper-focused implemented of a stake-weighted autonomous reward mechanism. 
+
+This repo is more of a thought-experiment than an MVP. It includes a fairly complete set of proposed implementations of the building blocks of this project. The goal is to give people enough insight into the proposal to understand the vision, provide feedback, and ideally begin contributing. 
 
 Read the concise product brief in [docs/product/SWARM_MVP.md](docs/product/SWARM_MVP.md),
 then the active market-entry [plan](docs/plans/2026-08-04-001-feat-swarm-market-entry-foundation-plan.md).
